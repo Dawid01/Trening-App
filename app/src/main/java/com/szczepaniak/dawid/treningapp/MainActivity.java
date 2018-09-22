@@ -1,6 +1,6 @@
 package com.szczepaniak.dawid.treningapp;
 
-import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -91,11 +91,12 @@ public class MainActivity extends AppCompatActivity {
     private void loadTrenings(String type){
 
         trenings.removeAllViews();
+       // trenings.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         ArrayList<TreningClass> treningClasses = treningsDataBase.getTreningClassList();
 
         if(type == "All") {
-            for (TreningClass trening : treningClasses) {
+            for (final TreningClass trening : treningClasses) {
 
                 LayoutInflater inflater = LayoutInflater.from(this);
                 LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.treninglistelement, null, false);
@@ -103,12 +104,25 @@ public class MainActivity extends AppCompatActivity {
                 title.setText(trening.getName());
                 ImageView icon = layout.findViewById(R.id.icon);
                 setImageIcon(icon, trening.getType());
+
+                layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent treningIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                        treningIntent.putExtra("TreningName", trening.getName());
+                        MainActivity.this.startActivity(treningIntent);
+                        MainActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    }
+                });
+
                 trenings.addView(layout);
             }
         }else {
 
             for (TreningClass trening : treningClasses) {
 
+                final TreningClass t = trening;
                 if(trening.getType()== type) {
                     LayoutInflater inflater = LayoutInflater.from(this);
                     LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.treninglistelement, null, false);
@@ -116,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
                     title.setText(trening.getName());
                     ImageView icon = layout.findViewById(R.id.icon);
                     setImageIcon(icon, trening.getType());
+
+                    layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent treningIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                            treningIntent.putExtra("TreningName", t.getName());
+                            MainActivity.this.startActivity(treningIntent);
+                            MainActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+                        }
+                    });
+
                     trenings.addView(layout);
                 }
             }

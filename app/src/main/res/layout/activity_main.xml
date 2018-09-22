@@ -12,7 +12,7 @@
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="10dp"
             android:background="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
 
@@ -71,12 +71,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Triceps" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/OwnWorkouts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Own Workouts" />
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
         <android.support.constraint.ConstraintLayout
@@ -87,7 +94,7 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/TreningsList"
