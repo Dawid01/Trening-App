@@ -2,11 +2,13 @@ package com.szczepaniak.dawid.treningapp;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -99,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.treninglistelement, null, false);
                 TextView title = layout.findViewById(R.id.Title);
                 title.setText(trening.getName());
+                ImageView icon = layout.findViewById(R.id.icon);
+                setImageIcon(icon, trening.getType());
                 trenings.addView(layout);
             }
         }else {
@@ -110,9 +114,40 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.treninglistelement, null, false);
                     TextView title = layout.findViewById(R.id.Title);
                     title.setText(trening.getName());
+                    ImageView icon = layout.findViewById(R.id.icon);
+                    setImageIcon(icon, trening.getType());
                     trenings.addView(layout);
                 }
             }
+        }
+    }
+
+    void setImageIcon(ImageView img, String type){
+
+        switch (type){
+
+            case "Abdomen":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.abdomen));
+                break;
+            case "Back":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.back));
+                break;
+            case "Biceps":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.biceps));
+                break;
+            case "Chest":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.chest));
+                break;
+            case "Shoulders":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.shoulders));
+                break;
+            case "Legs":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.leg));
+                break;
+            case "Triceps":
+                img.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.triceps));
+                break;
+            default:
         }
     }
 }
