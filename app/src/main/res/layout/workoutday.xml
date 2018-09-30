@@ -5,7 +5,9 @@
     android:id="@+id/WorkoutDay"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -34,8 +36,8 @@
                 app:srcCompat="@color/colorAccent" />
 
             <TextView
-                android:id="@+id/Data"
-                android:layout_width="100dp"
+                android:id="@+id/Date"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
@@ -75,11 +77,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="117dp"
                 android:layout_marginTop="8dp"
+                android:scrollbarThumbHorizontal="@color/colorScroll"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/bg"
                 app:layout_constraintVertical_bias="1.0"
-                tools:layout_editor_absoluteX="0dp"
-                android:scrollbarThumbHorizontal="@color/colorScroll">
+                tools:layout_editor_absoluteX="0dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -88,7 +90,7 @@
             </HorizontalScrollView>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton2"
+                android:id="@+id/AddWork"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginBottom="8dp"
