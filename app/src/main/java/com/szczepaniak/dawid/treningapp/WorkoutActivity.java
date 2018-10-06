@@ -7,9 +7,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +27,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private Dialog dialog;
     private LinearLayout workoutDays;
+    private int savedSeriesValue = 0;
+    private float savedKgValue = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +69,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void CreateDayList(){
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.workoutday, null, false);
+        final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.workoutday, null, false);
         FloatingActionButton addWork = layout.findViewById(R.id.AddWork);
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy ");
@@ -73,19 +79,148 @@ public class WorkoutActivity extends AppCompatActivity {
         int number = workoutDays.getChildCount() + 1;
         indexText.setText(String.valueOf(number));
         dateText.setText(strDate);
+        final LinearLayout notesLayout = layout.findViewById(R.id.NotesLayout);
         addWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowNotePopup();
+                ShowNotePopup(notesLayout);
             }
         });
         workoutDays.addView(layout);
 
     }
 
-    private void ShowNotePopup() {
+    private void ShowNotePopup(final LinearLayout notesLayout) {
         dialog.setContentView(R.layout.create_note);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        final EditText seriesText = dialog.findViewById(R.id.Series);
+        seriesText.setText("" + savedSeriesValue);
+        final EditText kgText = dialog.findViewById(R.id.Kg);
+        kgText.setText("" + savedKgValue);
+
+
+        seriesText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try{
+                    savedSeriesValue = Integer.parseInt(seriesText.getText().toString());
+                }catch (Exception e){
+
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        kgText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+                    savedKgValue = Float.parseFloat(kgText.getText().toString());
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        ImageView seriesUp = dialog.findViewById(R.id.SeriesUp);
+        seriesUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int seriesCount =  Integer.parseInt(seriesText.getText().toString());
+                int newValue = seriesCount + 1;
+                seriesText.setText("" + newValue);
+                savedSeriesValue = newValue;
+            }
+        });
+        ImageView seriesDown = dialog.findViewById(R.id.SeriesDown);
+        seriesDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int seriesCount =  Integer.parseInt(seriesText.getText().toString());
+                if(seriesCount != 0) {
+                    int newValue = seriesCount - 1;
+                    seriesText.setText("" + newValue);
+                    savedSeriesValue = newValue;
+                }
+
+            }
+        });
+
+        ImageView kgUp = dialog.findViewById(R.id.KgUp);
+        kgUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float kgCount =  Float.parseFloat(kgText.getText().toString());
+                int i = (int) kgCount;
+                float afterNumbers = kgCount - i;
+                float newValue;
+                if(afterNumbers == 0f || afterNumbers == 0.25f || afterNumbers == 0.5f || afterNumbers == 0.75f){
+                    newValue = kgCount + 0.25f;
+                }else {
+                    newValue = Math.round(kgCount * 4)/4f;
+                }
+                kgText.setText("" + newValue);
+                savedKgValue = newValue;
+            }
+        });
+        ImageView kgDown = dialog.findViewById(R.id.KgDown);
+        kgDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float kgCount = Float.parseFloat(kgText.getText().toString());
+                if (kgCount != 0f) {
+                    int i = (int) kgCount;
+                    float afterNumbers = kgCount - i;
+                    float newValue;
+                    if (afterNumbers == 0f || afterNumbers == 0.25f || afterNumbers == 0.5f || afterNumbers == 0.75f) {
+                        newValue = kgCount - 0.25f;
+                    } else {
+                        newValue = Math.round(kgCount * 4) / 4f;
+                    }
+                    kgText.setText("" + newValue);
+                    savedKgValue = newValue;
+                }
+            }
+        });
+
+        Button create =  dialog.findViewById(R.id.Create);
+
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
+                final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
+                TextView sereisKgText = workOutSerie.findViewById(R.id.SeriesKg);
+                sereisKgText.setText("" + savedSeriesValue + "X" + savedKgValue);
+                notesLayout.addView(workOutSerie);
+                dialog.dismiss();
+
+            }
+        });
+
         dialog.show();
     }
 }
