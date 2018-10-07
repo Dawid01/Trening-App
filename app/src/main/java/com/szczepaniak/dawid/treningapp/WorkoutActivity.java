@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,13 +12,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +34,9 @@ public class WorkoutActivity extends AppCompatActivity {
     private LinearLayout workoutDays;
     private int savedSeriesValue = 0;
     private float savedKgValue = 0f;
+
+    private int deltaX;
+    private  int deltaY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +213,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        Button create =  dialog.findViewById(R.id.Create);
+        final Button create =  dialog.findViewById(R.id.Create);
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +222,51 @@ public class WorkoutActivity extends AppCompatActivity {
                 LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
                 final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
                 TextView sereisKgText = workOutSerie.findViewById(R.id.SeriesKg);
-                sereisKgText.setText("" + savedSeriesValue + "X" + savedKgValue);
+                TextView serieIndex = workOutSerie.findViewById(R.id.Index);
+                int index = notesLayout.getChildCount() + 1;
+                serieIndex.setText("" + index);
+                float afterNumber = savedKgValue  - (int)savedKgValue;
+                String kg;
+                if(afterNumber == 0f){
+                    kg = "" + (int) savedKgValue;
+                }else {
+                    kg = "" + savedKgValue;
+
+                }
+
+                final Button deleteBtm = workOutSerie.findViewById(R.id.Delete);
+
+                workOutSerie.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        deleteBtm.setVisibility(View.VISIBLE);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlphaAnimation exitAnim = new AlphaAnimation(1.0f, 0.0f);
+                                exitAnim.setDuration(500);
+                                exitAnim.setStartOffset(5000);
+                                exitAnim.setFillAfter(true);
+                                deleteBtm.startAnimation(exitAnim);
+                                deleteBtm.setVisibility(View.GONE);
+
+                            }
+                        }, 2000);
+                        return false;
+                    }
+                });
+
+                deleteBtm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        notesLayout.removeView(workOutSerie);
+                        ResetSeriesList(notesLayout);
+                    }
+                });
+
+                sereisKgText.setText("" + savedSeriesValue + " X " + kg);
                 notesLayout.addView(workOutSerie);
                 dialog.dismiss();
 
@@ -222,5 +274,17 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+
+    void ResetSeriesList(LinearLayout layout){
+
+        for(int i = 0; i < layout.getChildCount(); i++){
+
+            View workOutSerie = layout.getChildAt(i);
+            TextView serieIndex = workOutSerie.findViewById(R.id.Index);
+            int index = i + 1;
+            serieIndex.setText("" + index);
+        }
     }
 }
