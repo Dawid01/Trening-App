@@ -1,17 +1,23 @@
 package com.szczepaniak.dawid.treningapp;
 
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 
@@ -21,16 +27,58 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout trenings;
     TreningsDataBase treningsDataBase;
     TabLayout tabLayout;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setTitle("Workouts");
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.drawer);
+
         trenings = findViewById(R.id.TreningsList);
         treningsDataBase = new TreningsDataBase();
         tabLayout = findViewById(R.id.tabs);
         loadTrenings("All");
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+
+        drawerLayout.addDrawerListener(
+                new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                    }
+
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+
+                    }
+                }
+        );
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -93,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         trenings.removeAllViews();
        // trenings.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        ArrayList<TreningClass> treningClasses = treningsDataBase.getTreningClassList();
+        final ArrayList<TreningClass> treningClasses = treningsDataBase.getTreningClassList();
 
         if(type == "All") {
             for (final TreningClass trening : treningClasses) {
@@ -137,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                             Intent treningIntent = new Intent(MainActivity.this, WorkoutActivity.class);
                             treningIntent.putExtra("TreningName", t.getName());
+                            treningIntent.putExtra("TreningIndex", treningClasses.indexOf(t));
                             MainActivity.this.startActivity(treningIntent);
                             MainActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
@@ -176,5 +225,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

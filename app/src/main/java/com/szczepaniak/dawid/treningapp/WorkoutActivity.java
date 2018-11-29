@@ -36,8 +36,9 @@ public class WorkoutActivity extends AppCompatActivity {
     public int savedSeriesValue = 0;
     public float savedKgValue = 0f;
 
-    private SaveManager saveManager;
+   // private SaveManager saveManager;
     private ShowNotePopup showNotePopup;
+    TreningClass trening;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,16 @@ public class WorkoutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
         workoutDays =  findViewById(R.id.WorkoutDays);
-        saveManager = new SaveManager(this);
+        //saveManager = new SaveManager(this);
         dialog =  new Dialog(this);
         showNotePopup =  new ShowNotePopup(WorkoutActivity.this, dialog);
 
         if(extras != null) {
 
             getSupportActionBar().setTitle(extras.getString("TreningName"));
+            TreningsDataBase treningsDataBase =  new TreningsDataBase();
+            int index = extras.getInt("TreningIndex");
+            trening = treningsDataBase.getTreningClassList().get(index);
         }
 
         LoadWorkouts();
@@ -101,7 +105,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
     void LoadWorkouts(){
 
-        ArrayList<WorkoutDay> workoutDaysList = saveManager.getWorkoutDays(getSupportActionBar().getTitle().toString());
+        //ArrayList<WorkoutDay> workoutDaysList = saveManager.getWorkoutDays(getSupportActionBar().getTitle().toString());
+        ArrayList<WorkoutDay> workoutDaysList = trening.getWorkoutDays();
         ArrayList<String> dates =  new ArrayList<>();
         boolean createNewWorkoutDay = true;
         final String newData;
@@ -113,6 +118,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
             CreateDayList(workDay.getDateText());
             dates.add(workDay.getDateText());
+            for(Workout workout : workDay.getWorkouts()){
+
+                //CreateWorkoutNote(workDay.getNotesLayout(),workout.getSeries(),workout.getKgs());
+            }
         }
 
         for(String date : dates) {
@@ -127,6 +136,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
             CreateDayList(newData);
         }
+
+
     }
 
     void CreateWorkoutNote(final LinearLayout notes, int series, float kgs){
