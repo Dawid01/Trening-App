@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#c67100</color>
     <color name="colorAccent">#ffd149</color>
     <color name="colorScroll">#20c56000</color>
+    <color name="musscleGood">#4aef4a</color>
+    <color name="musscleBad">#ef0e0e</color>
 
 </resources>
