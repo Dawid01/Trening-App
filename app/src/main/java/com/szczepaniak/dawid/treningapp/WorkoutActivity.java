@@ -205,4 +205,6 @@ public class WorkoutActivity extends AppCompatActivity {
             serieIndex.setText("" + index);
         }
     }
+
+
 }
