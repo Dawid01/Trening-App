@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity{
 
     private LinearLayout trenings;
     private TreningsDataBase treningsDataBase;
@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle drawerToggle;
     private ActionBar actionbar;
     private FirebaseAuth mAuth;
-    private String userName;
-    private String userEmail;
-    private Uri userAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,47 +68,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadTrenings("All");
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        drawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        AccountDrawer accountDrawer =  new AccountDrawer(drawerLayout, navigationView, MainActivity.this, MainActivity.this);
 
-        if (user != null) {
-            userName = user.getDisplayName();
-            userEmail = user.getEmail();
-            userAvatar = user.getPhotoUrl();
-
-        }
-
-        View header = navigationView.getHeaderView(0);
-        CircleImageView avatar = header.findViewById(R.id.Avatar);
-        Picasso.get().load(userAvatar).into(avatar);
-        TextView name = header.findViewById(R.id.Name);
-        name.setText(userName);
-        TextView email = header.findViewById(R.id.Email);
-        email.setText(userEmail);
 
         NavigationView mussclesNav = findViewById(R.id.nav_view2);
         View muscleHeader = mussclesNav.getHeaderView(0);
         ImageView abdoneMMuscle = muscleHeader.findViewById(R.id.AbdonemDrawer);
-        abdoneMMuscle.setColorFilter(0x4aef4a, PorterDuff.Mode.SRC_ATOP );
+        abdoneMMuscle.setColorFilter(Color.rgb(74, 239, 74));
         ImageView backMuscle = muscleHeader.findViewById(R.id.BackDrawer);
-        backMuscle.setColorFilter(0x4aef4a, PorterDuff.Mode.SRC_ATOP );
+        backMuscle.setColorFilter(Color.rgb(74, 239, 74));
         ImageView armsMuscle = muscleHeader.findViewById(R.id.ArmsDrawer);
-        armsMuscle.setColorFilter(0x4aef4a, PorterDuff.Mode.SRC_ATOP );
+        armsMuscle.setColorFilter(Color.rgb(74, 239, 74));
         ImageView chestMuscle = muscleHeader.findViewById(R.id.ChestDrawer);
-        chestMuscle.setColorFilter(0x4aef4a, PorterDuff.Mode.SRC_ATOP );
+        chestMuscle.setColorFilter(Color.rgb(74, 239, 74));
         ImageView shouldersMuscle = muscleHeader.findViewById(R.id.ShouldersDrawer);
-        shouldersMuscle.setColorFilter(0x4aef4a, PorterDuff.Mode.SRC_ATOP );
+        shouldersMuscle.setColorFilter(Color.rgb(74, 239, 74));
         ImageView legsMuscle = muscleHeader.findViewById(R.id.LegsDrawer);
-        legsMuscle.setColorFilter(0xef0e0e, PorterDuff.Mode.SRC_ATOP );
+        legsMuscle.setColorFilter(Color.rgb(239, 14, 14));
 
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -161,12 +141,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-        @Override
-        public boolean onCreateOptionsMenu (Menu menu){
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.treningtype, menu);
-            return true;
-        }
+//        @Override
+//        public boolean onCreateOptionsMenu (Menu menu){
+//            MenuInflater inflater = getMenuInflater();
+//            inflater.inflate(R.menu.treningtype, menu);
+//            return true;
+//        }
 
 
     private void loadTrenings(String type){
@@ -271,25 +251,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case R.id.nav_singout: {
-                Toast.makeText(MainActivity.this, "Sing out", Toast.LENGTH_SHORT).show();
-                FirebaseAuth.getInstance().signOut();
-                Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);
-                MainActivity.this.startActivity(loginActivity);
-                MainActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                MainActivity.this.finish();
-                finish();
-                break;
-            }
-        }
-        return true;
-    }
 
 
 }
