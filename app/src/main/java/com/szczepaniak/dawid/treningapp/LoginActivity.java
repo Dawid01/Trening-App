@@ -16,12 +16,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -92,7 +98,9 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+
                 firebaseAuthWithGoogle(account);
+
 
             } catch (ApiException e) {
                 Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -109,6 +117,24 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseFirestore db;
+                            db = FirebaseFirestore.getInstance();
+
+                            Map<String, Boolean> musclesStatus = new HashMap<>();
+                            musclesStatus.put("Abdonem", true);
+                            musclesStatus.put("Arms", true);
+                            musclesStatus.put("Back", true);
+                            musclesStatus.put("Chest", true);
+                            musclesStatus.put("Legs", true);
+                            musclesStatus.put("Shoulders", true);
+
+                            db.collection("Users").document(user.getUid()).set(musclesStatus)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                             Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
                             LoginActivity.this.startActivity(mainAvivity);
                             LoginActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);

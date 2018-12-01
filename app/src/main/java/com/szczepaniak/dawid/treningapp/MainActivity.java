@@ -31,6 +31,7 @@ import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity{
     private ActionBarDrawerToggle drawerToggle;
     private ActionBar actionbar;
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +78,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         NavigationView mussclesNav = findViewById(R.id.nav_view2);
-        View muscleHeader = mussclesNav.getHeaderView(0);
-        ImageView abdoneMMuscle = muscleHeader.findViewById(R.id.AbdonemDrawer);
-        abdoneMMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        ImageView backMuscle = muscleHeader.findViewById(R.id.BackDrawer);
-        backMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        ImageView armsMuscle = muscleHeader.findViewById(R.id.ArmsDrawer);
-        armsMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        ImageView chestMuscle = muscleHeader.findViewById(R.id.ChestDrawer);
-        chestMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        ImageView shouldersMuscle = muscleHeader.findViewById(R.id.ShouldersDrawer);
-        shouldersMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        ImageView legsMuscle = muscleHeader.findViewById(R.id.LegsDrawer);
-        legsMuscle.setColorFilter(Color.rgb(239, 14, 14));
+        MusclesDrawer musclesDrawer =  new MusclesDrawer(mussclesNav, MainActivity.this);
 
 
 
