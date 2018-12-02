@@ -33,7 +33,9 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:tabMode="scrollable">
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/colorPrimaryDark"
+                app:tabTextColor="@color/cardview_light_background">
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/All"

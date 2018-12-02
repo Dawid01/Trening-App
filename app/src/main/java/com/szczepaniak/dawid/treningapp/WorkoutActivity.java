@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,6 +41,7 @@ public class WorkoutActivity extends AppCompatActivity {
    // private SaveManager saveManager;
     private ShowNotePopup showNotePopup;
     TreningClass trening;
+    DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,12 @@ public class WorkoutActivity extends AppCompatActivity {
         //saveManager = new SaveManager(this);
         dialog =  new Dialog(this);
         showNotePopup =  new ShowNotePopup(WorkoutActivity.this, dialog);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        AccountDrawer accountDrawer =  new AccountDrawer(drawerLayout, navigationView, WorkoutActivity.this, WorkoutActivity.this);
+        NavigationView mussclesNav = findViewById(R.id.nav_view2);
+        MusclesDrawer musclesDrawer =  new MusclesDrawer(mussclesNav, WorkoutActivity.this);
 
         if(extras != null) {
 

@@ -1,11 +1,14 @@
 package com.szczepaniak.dawid.treningapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -16,7 +19,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -24,7 +29,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,11 +45,15 @@ public class LoginActivity extends AppCompatActivity {
     private final int RC_SIGN_IN = 1;
     private GoogleApiClient googleApiClient;
     private FirebaseAuth.AuthStateListener authStateListener;
+    boolean registred = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -110,31 +121,77 @@ public class LoginActivity extends AppCompatActivity {
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
+        FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+      //  String currentID = mAuth.getCurrentUser().getUid();
+//        db.collection("Users").document(currentID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    registred = true;
+//                }else {
+//                    registred = false;
+//                }
+//            }
+//        });
+
+        ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+        pd.setMessage("Login....");
+        pd.show();
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
+                            signInGoogle.setVisibility(View.INVISIBLE);
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             FirebaseFirestore db;
                             db = FirebaseFirestore.getInstance();
 
-                            Map<String, Boolean> musclesStatus = new HashMap<>();
-                            musclesStatus.put("Abdonem", true);
-                            musclesStatus.put("Arms", true);
-                            musclesStatus.put("Back", true);
-                            musclesStatus.put("Chest", true);
-                            musclesStatus.put("Legs", true);
-                            musclesStatus.put("Shoulders", true);
+                            db.collection("Users").document(user.getUid()).get().onSuccessTask(new SuccessContinuation<DocumentSnapshot, Object>() {
+                                @NonNull
+                                @Override
+                                public Task<Object> then(@Nullable DocumentSnapshot documentSnapshot) throws Exception {
 
-                            db.collection("Users").document(user.getUid()).set(musclesStatus)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    if(task.isSuccessful()){
+
+                                        registred = true;
+                                    }else {
+
+                                        registred = false;
+                                    }
+
+                                    return null;
+                                }
+                            });
+
+
+
+                           if(!registred) {
+
+                                    Map<String, Object> musclesStatus = new HashMap<>();
+                                    musclesStatus.put("Registred", true);
+                                    musclesStatus.put("Abdonem", true);
+                                    musclesStatus.put("Arms", true);
+                                    musclesStatus.put("Back", true);
+                                    musclesStatus.put("Chest", true);
+                                    musclesStatus.put("Legs", true);
+                                    musclesStatus.put("Shoulders", true);
+
+                                db.collection("Users").document(user.getUid()).set(musclesStatus)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                          }
+
+
                             Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
                             LoginActivity.this.startActivity(mainAvivity);
                             LoginActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
