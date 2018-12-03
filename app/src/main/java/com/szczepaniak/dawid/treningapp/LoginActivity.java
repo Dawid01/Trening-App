@@ -30,7 +30,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -148,54 +150,53 @@ public class LoginActivity extends AppCompatActivity {
 
                             signInGoogle.setVisibility(View.INVISIBLE);
 
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            FirebaseFirestore db;
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseFirestore db;
                             db = FirebaseFirestore.getInstance();
 
-                            db.collection("Users").document(user.getUid()).get().onSuccessTask(new SuccessContinuation<DocumentSnapshot, Object>() {
-                                @NonNull
+                            DocumentReference documentReference = db.collection("Users").document(user.getUid());
+
+                            documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
-                                public Task<Object> then(@Nullable DocumentSnapshot documentSnapshot) throws Exception {
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                    try {
+//                                        registred = documentSnapshot.getBoolean("Registred");
+//                                    }catch (Exception e){
+//                                        registred = false;
+//                                    }
 
-                                    if(task.isSuccessful()){
+                                    if(registred = documentSnapshot.getBoolean("Registred") == null) {
 
-                                        registred = true;
+                                        Map<String, Object> musclesStatus = new HashMap<>();
+                                        musclesStatus.put("Registred", true);
+                                        musclesStatus.put("Abdonem", true);
+                                        musclesStatus.put("Arms", true);
+                                        musclesStatus.put("Back", true);
+                                        musclesStatus.put("Chest", true);
+                                        musclesStatus.put("Legs", true);
+                                        musclesStatus.put("Shoulders", true);
+
+                                        db.collection("Users").document(user.getUid()).set(musclesStatus, SetOptions.merge())
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
+                                                        Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
+                                                        LoginActivity.this.startActivity(mainAvivity);
+                                                        LoginActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                                        LoginActivity.this.finish();
+                                                    }
+                                                });
                                     }else {
 
-                                        registred = false;
+                                        Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
+                                        LoginActivity.this.startActivity(mainAvivity);
+                                        LoginActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                                        LoginActivity.this.finish();
                                     }
-
-                                    return null;
                                 }
                             });
 
-
-
-                           if(!registred) {
-
-                                    Map<String, Object> musclesStatus = new HashMap<>();
-                                    musclesStatus.put("Registred", true);
-                                    musclesStatus.put("Abdonem", true);
-                                    musclesStatus.put("Arms", true);
-                                    musclesStatus.put("Back", true);
-                                    musclesStatus.put("Chest", true);
-                                    musclesStatus.put("Legs", true);
-                                    musclesStatus.put("Shoulders", true);
-
-                                db.collection("Users").document(user.getUid()).set(musclesStatus)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                          }
-
-
-                            Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
-                            LoginActivity.this.startActivity(mainAvivity);
-                            LoginActivity.this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                            LoginActivity.this.finish();
                             //updateUI(user);
                         } else {
                             //updateUI(null);
