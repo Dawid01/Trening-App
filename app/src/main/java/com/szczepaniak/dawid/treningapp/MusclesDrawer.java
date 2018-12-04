@@ -52,57 +52,60 @@ public class MusclesDrawer {
     }
 
 
-    void DrawMuscles(DocumentSnapshot doc){
+    void DrawMuscles(DocumentSnapshot doc) {
 
         View muscleHeader = navigationView.getHeaderView(0);
 
-        boolean canAbdonem = doc.getBoolean("Abdonem");
-        ImageView abdoneMuscle = muscleHeader.findViewById(R.id.AbdonemDrawer);
-        if(canAbdonem){
-            abdoneMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            abdoneMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+        if (doc.getBoolean("Abdonem") != null) {
 
-        boolean canArms = doc.getBoolean("Arms");
-        ImageView armsMuscle = muscleHeader.findViewById(R.id.ArmsDrawer);
-        if(canArms){
-            armsMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            armsMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+            boolean canAbdonem = doc.getBoolean("Abdonem");
+            ImageView abdoneMuscle = muscleHeader.findViewById(R.id.AbdonemDrawer);
+            if (canAbdonem) {
+                abdoneMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                abdoneMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
 
-        boolean canBack = doc.getBoolean("Back");
-        ImageView BackMuscle = muscleHeader.findViewById(R.id.BackDrawer);
-        if(canBack){
-            BackMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            BackMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+            boolean canArms = doc.getBoolean("Arms");
+            ImageView armsMuscle = muscleHeader.findViewById(R.id.ArmsDrawer);
+            if (canArms) {
+                armsMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                armsMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
 
-        boolean canChest = doc.getBoolean("Chest");
-        ImageView ChestMuscle = muscleHeader.findViewById(R.id.ChestDrawer);
-        if(canChest){
-            ChestMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            ChestMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+            boolean canBack = doc.getBoolean("Back");
+            ImageView BackMuscle = muscleHeader.findViewById(R.id.BackDrawer);
+            if (canBack) {
+                BackMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                BackMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
 
-        boolean canLegs = doc.getBoolean("Legs");
-        ImageView LegsMuscle = muscleHeader.findViewById(R.id.LegsDrawer);
-        if(canLegs){
-            LegsMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            LegsMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+            boolean canChest = doc.getBoolean("Chest");
+            ImageView ChestMuscle = muscleHeader.findViewById(R.id.ChestDrawer);
+            if (canChest) {
+                ChestMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                ChestMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
 
-        boolean canShoulders = doc.getBoolean("Shoulders");
-        ImageView ShouldersMuscle = muscleHeader.findViewById(R.id.ShouldersDrawer);
-        if(canShoulders){
-            ShouldersMuscle.setColorFilter(Color.rgb(74, 239, 74));
-        }else {
-            ShouldersMuscle.setColorFilter(Color.rgb(239, 14, 14));
-        }
+            boolean canLegs = doc.getBoolean("Legs");
+            ImageView LegsMuscle = muscleHeader.findViewById(R.id.LegsDrawer);
+            if (canLegs) {
+                LegsMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                LegsMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
 
+            boolean canShoulders = doc.getBoolean("Shoulders");
+            ImageView ShouldersMuscle = muscleHeader.findViewById(R.id.ShouldersDrawer);
+            if (canShoulders) {
+                ShouldersMuscle.setColorFilter(Color.rgb(74, 239, 74));
+            } else {
+                ShouldersMuscle.setColorFilter(Color.rgb(239, 14, 14));
+            }
+
+        }
     }
 }
