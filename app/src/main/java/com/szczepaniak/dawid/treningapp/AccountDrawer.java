@@ -74,7 +74,13 @@ public class AccountDrawer implements NavigationView.OnNavigationItemSelectedLis
                 context.startActivity(loginActivity);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 activity.finish();
-                activity.finish();
+                break;
+            }
+            case R.id.nav_maps: {
+
+                Intent loginActivity = new Intent(context, MapActivity.class);
+                context.startActivity(loginActivity);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 break;
             }
         }
