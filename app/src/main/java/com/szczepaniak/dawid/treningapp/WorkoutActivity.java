@@ -24,11 +24,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -40,9 +52,12 @@ public class WorkoutActivity extends AppCompatActivity {
 
    // private SaveManager saveManager;
     private ShowNotePopup showNotePopup;
-    TreningClass trening;
-    DrawerLayout drawerLayout;
+    private TreningClass trening;
+    private DrawerLayout drawerLayout;
+    private FirebaseAuth mAuth;
+    private  ArrayList<WorkoutDay> workoutDaysList;
 
+    private String WORKOUT_NAME = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +68,8 @@ public class WorkoutActivity extends AppCompatActivity {
         //saveManager = new SaveManager(this);
         dialog =  new Dialog(this);
         showNotePopup =  new ShowNotePopup(WorkoutActivity.this, dialog);
+
+        mAuth = FirebaseAuth.getInstance();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -66,6 +83,7 @@ public class WorkoutActivity extends AppCompatActivity {
             TreningsDataBase treningsDataBase =  new TreningsDataBase();
             int index = extras.getInt("TreningIndex");
             trening = treningsDataBase.getTreningClassList().get(index);
+            WORKOUT_NAME = extras.getString("TreningName");
         }
 
         LoadWorkouts();
@@ -115,7 +133,22 @@ public class WorkoutActivity extends AppCompatActivity {
     void LoadWorkouts(){
 
         //ArrayList<WorkoutDay> workoutDaysList = saveManager.getWorkoutDays(getSupportActionBar().getTitle().toString());
-        ArrayList<WorkoutDay> workoutDaysList = trening.getWorkoutDays();
+        //ArrayList<WorkoutDay> workoutDaysList = trening.getWorkoutDays();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+
+        DocumentReference documentReference = db.collection("Users").document(user.getUid());
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                workoutDaysList = (ArrayList<WorkoutDay>)documentSnapshot.get(WORKOUT_NAME);
+            }
+        });
+
+        workoutDaysList = trening.getWorkoutDays();
         ArrayList<String> dates =  new ArrayList<>();
         boolean createNewWorkoutDay = true;
         final String newData;
@@ -214,6 +247,16 @@ public class WorkoutActivity extends AppCompatActivity {
             serieIndex.setText("" + index);
         }
     }
+
+
+//    private ArrayList<WorkoutDay> GetArrayFromStrings(String string){
+//
+//        Gson gson = new Gson();
+//        Type type = new TypeToken<string {}.getType();
+//
+//        return gson.fromJson(yourJsonString, type);;
+//
+//    }
 
 
 }

@@ -180,6 +180,8 @@ public class LoginActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+
+                                                        db.collection("Uers").document(user.getUid()).collection("Workouts");
                                                         Toast.makeText(LoginActivity.this, "Register sucess", Toast.LENGTH_SHORT).show();
                                                         Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
                                                         LoginActivity.this.startActivity(mainAvivity);
@@ -187,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         LoginActivity.this.finish();
                                                     }
                                                 });
+
                                     }else {
 
                                         Intent mainAvivity = new Intent(LoginActivity.this, MainActivity.class);
