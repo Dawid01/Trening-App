@@ -11,10 +11,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class ShowNotePopup {
 
     private WorkoutActivity workoutActivity;
     private Dialog dialog;
+    private FirebaseAuth mAuth;
 
     public ShowNotePopup(WorkoutActivity workoutActivity, Dialog dialog) {
         this.workoutActivity = workoutActivity;
@@ -22,10 +36,10 @@ public class ShowNotePopup {
     }
 
 
-    public void CreateNotePopup(final LinearLayout notesLayout) {
+    public void CreateNotePopup(final LinearLayout notesLayout, final ArrayList<WorkoutDay> workoutDaysList, final String workName) {
 
 
-
+        mAuth = FirebaseAuth.getInstance();
         dialog.setContentView(R.layout.create_note);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         final EditText seriesText = dialog.findViewById(R.id.Series);
@@ -147,6 +161,20 @@ public class ShowNotePopup {
             public void onClick(View v) {
 
                 workoutActivity.CreateWorkoutNote(notesLayout, workoutActivity.savedSeriesValue, workoutActivity.savedKgValue);
+                final FirebaseUser user = mAuth.getCurrentUser();
+                final FirebaseFirestore db;
+                db = FirebaseFirestore.getInstance();
+
+                final DocumentReference documentReference = db.collection("Users").document(user.getUid());
+
+                Map<String, Object> workoutMap = new HashMap<>();
+                workoutMap.put(workName, ArrayToString(workoutDaysList));
+                documentReference.set(workoutMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
                 dialog.dismiss();
 
             }
@@ -154,5 +182,13 @@ public class ShowNotePopup {
 
         dialog.show();
     }
+
+
+    public String ArrayToString(ArrayList<WorkoutDay> list){
+
+        Gson gson = new Gson();
+        return gson.toJson(list);
+    }
+
 
 }

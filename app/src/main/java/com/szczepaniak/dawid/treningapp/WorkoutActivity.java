@@ -58,6 +58,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private  ArrayList<WorkoutDay> workoutDaysList;
 
     private String WORKOUT_NAME = "";
+    private  String TODAY_TIME = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +69,12 @@ public class WorkoutActivity extends AppCompatActivity {
         //saveManager = new SaveManager(this);
         dialog =  new Dialog(this);
         showNotePopup =  new ShowNotePopup(WorkoutActivity.this, dialog);
-
         mAuth = FirebaseAuth.getInstance();
+
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy ");
+        TODAY_TIME = "" + mdformat.format(calendar.getTime());
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -122,18 +127,17 @@ public class WorkoutActivity extends AppCompatActivity {
         addWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNotePopup.CreateNotePopup(notesLayout);
+                showNotePopup.CreateNotePopup(notesLayout, workoutDaysList, WORKOUT_NAME);
             }
         });
         workoutDays.addView(layout);
+        workoutDaysList.add(new WorkoutDay(TODAY_TIME));
 
     }
 
 
     void LoadWorkouts(){
 
-        //ArrayList<WorkoutDay> workoutDaysList = saveManager.getWorkoutDays(getSupportActionBar().getTitle().toString());
-        //ArrayList<WorkoutDay> workoutDaysList = trening.getWorkoutDays();
         final FirebaseUser user = mAuth.getCurrentUser();
         final FirebaseFirestore db;
         db = FirebaseFirestore.getInstance();
@@ -144,42 +148,27 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                workoutDaysList = (ArrayList<WorkoutDay>) documentSnapshot.get(WORKOUT_NAME);
+
+                if(workoutDaysList != null) {
+                    WorkoutDay lastWorkoutDay = workoutDaysList.get(workoutDaysList.size() - 1);
+                    if (lastWorkoutDay != null) {
+
+                        if (lastWorkoutDay.getDate() != TODAY_TIME) {
+
+                            CreateDayList(TODAY_TIME);
+                        }
+                    }
+                }else {
+
+                    workoutDaysList =  new ArrayList<WorkoutDay>();
+                    CreateDayList(TODAY_TIME);
+
+                }
+
                 workoutDaysList = (ArrayList<WorkoutDay>)documentSnapshot.get(WORKOUT_NAME);
             }
         });
-
-        workoutDaysList = trening.getWorkoutDays();
-        ArrayList<String> dates =  new ArrayList<>();
-        boolean createNewWorkoutDay = true;
-        final String newData;
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy ");
-        newData = "" + mdformat.format(calendar.getTime());
-
-        for(WorkoutDay workDay : workoutDaysList){
-
-            CreateDayList(workDay.getDateText());
-            dates.add(workDay.getDateText());
-            for(Workout workout : workDay.getWorkouts()){
-
-                //CreateWorkoutNote(workDay.getNotesLayout(),workout.getSeries(),workout.getKgs());
-            }
-        }
-
-        for(String date : dates) {
-
-            if(newData == date){
-
-                createNewWorkoutDay = false;
-            }
-        }
-
-        if(createNewWorkoutDay){
-
-            CreateDayList(newData);
-        }
-
-
     }
 
     void CreateWorkoutNote(final LinearLayout notes, int series, float kgs){
@@ -194,6 +183,7 @@ public class WorkoutActivity extends AppCompatActivity {
         savedSeriesValue = series;
         float afterNumber = savedKgValue  - (int)savedKgValue;
         String kg;
+
         if(afterNumber == 0f){
             kg = "" + (int) savedKgValue;
         }else {
@@ -249,14 +239,13 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
 
-//    private ArrayList<WorkoutDay> GetArrayFromStrings(String string){
-//
-//        Gson gson = new Gson();
-//        Type type = new TypeToken<string {}.getType();
-//
-//        return gson.fromJson(yourJsonString, type);;
-//
-//    }
 
+    public ArrayList<WorkoutDay> StringToArray( String string){
 
+        ArrayList<WorkoutDay> list;
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<WorkoutDay>>() {}.getType();
+        list = gson.fromJson(string, type);
+        return list;
+    }
 }
