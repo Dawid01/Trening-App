@@ -30,13 +30,14 @@ public class ShowNotePopup {
     private Dialog dialog;
     private FirebaseAuth mAuth;
 
+
     public ShowNotePopup(WorkoutActivity workoutActivity, Dialog dialog) {
         this.workoutActivity = workoutActivity;
         this.dialog = dialog;
     }
 
 
-    public void CreateNotePopup(final LinearLayout notesLayout, final ArrayList<WorkoutDay> workoutDaysList, final String workName) {
+    public void CreateNotePopup(final LinearLayout notesLayout) {
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -161,20 +162,7 @@ public class ShowNotePopup {
             public void onClick(View v) {
 
                 workoutActivity.CreateWorkoutNote(notesLayout, workoutActivity.savedSeriesValue, workoutActivity.savedKgValue);
-                final FirebaseUser user = mAuth.getCurrentUser();
-                final FirebaseFirestore db;
-                db = FirebaseFirestore.getInstance();
 
-                final DocumentReference documentReference = db.collection("Users").document(user.getUid());
-
-                Map<String, Object> workoutMap = new HashMap<>();
-                workoutMap.put(workName, ArrayToString(workoutDaysList));
-                documentReference.set(workoutMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-                });
                 dialog.dismiss();
 
             }
@@ -184,11 +172,6 @@ public class ShowNotePopup {
     }
 
 
-    public String ArrayToString(ArrayList<WorkoutDay> list){
-
-        Gson gson = new Gson();
-        return gson.toJson(list);
-    }
 
 
 }

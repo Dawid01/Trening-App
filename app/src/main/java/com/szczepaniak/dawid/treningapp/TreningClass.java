@@ -24,7 +24,7 @@ public class TreningClass {
         workouts.add(new Workout(10, 80));
         workouts.add(new Workout(10, 80));
         workouts.add(new Workout(10, 80));
-        testWokroutDay.setWorkouts(workouts);
+        //testWokroutDay.setWorkouts(workouts);
         workoutDays.add(testWokroutDay);
     }
 

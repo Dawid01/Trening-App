@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class WorkoutDay {
 
     private String date;
-    private ArrayList<Workout> workouts;
     private LinearLayout notesLayout;
 
     public WorkoutDay(String date) {
@@ -19,13 +18,6 @@ public class WorkoutDay {
         return date;
     }
 
-    public ArrayList<Workout> getWorkouts() {
-        return workouts;
-    }
-
-    public void setWorkouts(ArrayList<Workout> workouts) {
-        this.workouts = workouts;
-    }
 
     public String getDate() {
         return date;

@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -40,7 +41,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -55,7 +58,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private TreningClass trening;
     private DrawerLayout drawerLayout;
     private FirebaseAuth mAuth;
-    private  ArrayList<WorkoutDay> workoutDaysList;
+    private ArrayList<WorkoutDay> workoutDaysList;
 
     private String WORKOUT_NAME = "";
     private  String TODAY_TIME = "";
@@ -127,7 +130,7 @@ public class WorkoutActivity extends AppCompatActivity {
         addWork.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNotePopup.CreateNotePopup(notesLayout, workoutDaysList, WORKOUT_NAME);
+                showNotePopup.CreateNotePopup(notesLayout);
             }
         });
         workoutDays.addView(layout);
@@ -148,7 +151,7 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                workoutDaysList = (ArrayList<WorkoutDay>) documentSnapshot.get(WORKOUT_NAME);
+                //workoutDaysList = (ArrayList<WorkoutDay>) documentSnapshot.get(WORKOUT_NAME);
 
                 if(workoutDaysList != null) {
                     WorkoutDay lastWorkoutDay = workoutDaysList.get(workoutDaysList.size() - 1);
@@ -166,14 +169,25 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 }
 
-                workoutDaysList = (ArrayList<WorkoutDay>)documentSnapshot.get(WORKOUT_NAME);
             }
         });
     }
 
-    void CreateWorkoutNote(final LinearLayout notes, int series, float kgs){
+    void CreateWorkoutNote(final LinearLayout notes, final int series, final float kgs){
 
-        LayoutInflater inflater = LayoutInflater.from(this);
+        final FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseFirestore db;
+        db = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(user.getUid());
+
+
+        Map<String, Object> workoutMap = new HashMap<>();
+        workoutDaysList =  new ArrayList<WorkoutDay>();
+        //workoutDaysList.add(new WorkoutDay(WORKOUT_NAME));
+        //workoutMap.put(WORKOUT_NAME, ArrayToString(workoutDaysList));
+        //workoutMap.put(WORKOUT_NAME, new WorkoutDay(TODAY_TIME));
+
+        LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
         final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
         TextView sereisKgText = workOutSerie.findViewById(R.id.SeriesKg);
         TextView serieIndex = workOutSerie.findViewById(R.id.Index);
@@ -225,6 +239,65 @@ public class WorkoutActivity extends AppCompatActivity {
 
         sereisKgText.setText("" + savedSeriesValue + " X " + kg);
         notes.addView(workOutSerie);
+
+//        documentReference.set(ArrayToString(workoutDaysList), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//
+////                LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
+////                final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
+////                TextView sereisKgText = workOutSerie.findViewById(R.id.SeriesKg);
+////                TextView serieIndex = workOutSerie.findViewById(R.id.Index);
+////                int index = notes.getChildCount() + 1;
+////                serieIndex.setText("" + index);
+////                savedKgValue = kgs;
+////                savedSeriesValue = series;
+////                float afterNumber = savedKgValue  - (int)savedKgValue;
+////                String kg;
+////
+////                if(afterNumber == 0f){
+////                    kg = "" + (int) savedKgValue;
+////                }else {
+////                    kg = "" + savedKgValue;
+////
+////                }
+////
+////                final Button deleteBtm = workOutSerie.findViewById(R.id.Delete);
+////
+////                workOutSerie.setOnLongClickListener(new View.OnLongClickListener() {
+////                    @Override
+////                    public boolean onLongClick(View v) {
+////                        deleteBtm.setVisibility(View.VISIBLE);
+////                        final Handler handler = new Handler();
+////                        handler.postDelayed(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                AlphaAnimation exitAnim = new AlphaAnimation(1.0f, 0.0f);
+////                                exitAnim.setDuration(500);
+////                                exitAnim.setStartOffset(5000);
+////                                exitAnim.setFillAfter(true);
+////                                deleteBtm.startAnimation(exitAnim);
+////                                deleteBtm.setVisibility(View.GONE);
+////
+////                            }
+////                        }, 2000);
+////                        return false;
+////                    }
+////                });
+////
+////                deleteBtm.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View v) {
+////
+////                        notes.removeView(workOutSerie);
+////                        ResetSeriesList(notes);
+////                    }
+////                });
+////
+////                sereisKgText.setText("" + savedSeriesValue + " X " + kg);
+////                notes.addView(workOutSerie);
+//            }
+//        });
     }
 
     void ResetSeriesList(LinearLayout layout){
@@ -247,5 +320,12 @@ public class WorkoutActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<WorkoutDay>>() {}.getType();
         list = gson.fromJson(string, type);
         return list;
+    }
+
+
+    public String ArrayToString(ArrayList<WorkoutDay> list){
+
+        Gson gson = new Gson();
+        return gson.toJson(list);
     }
 }
