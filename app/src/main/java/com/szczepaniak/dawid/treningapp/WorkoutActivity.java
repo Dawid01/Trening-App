@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -61,7 +62,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private ArrayList<WorkoutDay> workoutDaysList;
 
     private String WORKOUT_NAME = "";
-    private  String TODAY_TIME = "";
+    private String TODAY_TIME = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +135,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         workoutDays.addView(layout);
-        workoutDaysList.add(new WorkoutDay(TODAY_TIME));
+        //workoutDaysList.add(new WorkoutDay(TODAY_TIME));
 
     }
 
@@ -151,25 +152,46 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                //workoutDaysList = (ArrayList<WorkoutDay>) documentSnapshot.get(WORKOUT_NAME);
+                if (documentSnapshot.exists()) {
 
-                if(workoutDaysList != null) {
-                    WorkoutDay lastWorkoutDay = workoutDaysList.get(workoutDaysList.size() - 1);
-                    if (lastWorkoutDay != null) {
+                    Map<String, Object> workouts = (Map<String, Object>) documentSnapshot.get(WORKOUT_NAME);
 
-                        if (lastWorkoutDay.getDate() != TODAY_TIME) {
+
+                    if (workouts != null) {
+
+
+                        ArrayList<Map.Entry<String, Object>> workoutsList = new ArrayList<>();
+
+                        for (Map.Entry<String, Object> entry : workouts.entrySet()) {
+
+                            workoutsList.add(entry);
+                        }
+
+                        for(int i = 0; i < workouts.size(); i++){
+
+                            Map.Entry<String, Object> entry = workoutsList.get((workouts.size()-1) - i);
+                            String key = entry.getKey();
+                            Map<String, Object> series = (Map<String, Object>) entry.getValue();
+                            CreateDayList(key);
+                        }
+
+                        if (workouts.get(TODAY_TIME) == null) {
 
                             CreateDayList(TODAY_TIME);
                         }
+
+                    } else {
+
+                        CreateDayList(TODAY_TIME);
                     }
+
+
                 }else {
 
-                    workoutDaysList =  new ArrayList<WorkoutDay>();
                     CreateDayList(TODAY_TIME);
-
                 }
-
             }
+
         });
     }
 
@@ -329,3 +351,7 @@ public class WorkoutActivity extends AppCompatActivity {
         return gson.toJson(list);
     }
 }
+
+
+
+
