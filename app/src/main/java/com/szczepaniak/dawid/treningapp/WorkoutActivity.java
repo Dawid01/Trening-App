@@ -186,7 +186,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             Map<String, Object> series = (Map<String, Object>) entry.getValue();
                             CreateDayList(key, series);
                         }
-                        
+
 
                         if (!workouts.containsKey(TODAY_TIME)) {
 
