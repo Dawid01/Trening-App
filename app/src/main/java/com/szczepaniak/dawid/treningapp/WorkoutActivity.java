@@ -77,7 +77,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy ");
+        SimpleDateFormat mdformat = new SimpleDateFormat("dd.MM.yyyy");
         TODAY_TIME = "" + mdformat.format(calendar.getTime());
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -117,7 +117,7 @@ public class WorkoutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void CreateDayList(String date){
+    private void CreateDayList(String date,  Map<String, Object> series) {
 
         LayoutInflater inflater = LayoutInflater.from(this);
         final LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.workoutday, null, false);
@@ -137,6 +137,18 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutDays.addView(layout);
         //workoutDaysList.add(new WorkoutDay(TODAY_TIME));
 
+        if (series != null) {
+
+            for (Map.Entry<String, Object> serie : series.entrySet()) {
+
+                ArrayList<Long> workData = (ArrayList<Long>) serie.getValue();
+                if(workData != null) {
+                    long r = workData.get(0);
+                    long kg = workData.get(1);
+                    LoadWorkoutNote(notesLayout, (int)r, (int)kg);
+                }
+            }
+        }
     }
 
 
@@ -154,7 +166,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 if (documentSnapshot.exists()) {
 
-                    Map<String, Object> workouts = (Map<String, Object>) documentSnapshot.get(WORKOUT_NAME);
+                    HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
 
 
                     if (workouts != null) {
@@ -172,27 +184,84 @@ public class WorkoutActivity extends AppCompatActivity {
                             Map.Entry<String, Object> entry = workoutsList.get((workouts.size()-1) - i);
                             String key = entry.getKey();
                             Map<String, Object> series = (Map<String, Object>) entry.getValue();
-                            CreateDayList(key);
+                            CreateDayList(key, series);
                         }
+                        
 
-                        if (workouts.get(TODAY_TIME) == null) {
+                        if (!workouts.containsKey(TODAY_TIME)) {
 
-                            CreateDayList(TODAY_TIME);
+                            CreateDayList(TODAY_TIME, null);
                         }
 
                     } else {
 
-                        CreateDayList(TODAY_TIME);
+                        CreateDayList(TODAY_TIME, null);
                     }
 
 
                 }else {
 
-                    CreateDayList(TODAY_TIME);
+                    CreateDayList(TODAY_TIME, null);
                 }
             }
 
         });
+    }
+
+    void LoadWorkoutNote(final LinearLayout notes, final int series, final float kgs){
+
+        LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
+        final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
+        TextView sereisKgText = workOutSerie.findViewById(R.id.SeriesKg);
+        TextView serieIndex = workOutSerie.findViewById(R.id.Index);
+        int index = notes.getChildCount() + 1;
+        serieIndex.setText("" + index);
+        savedKgValue = kgs;
+        savedSeriesValue = series;
+        float afterNumber = savedKgValue  - (int)savedKgValue;
+        String kg;
+
+        if(afterNumber == 0f){
+            kg = "" + (int) savedKgValue;
+        }else {
+            kg = "" + savedKgValue;
+
+        }
+
+        final Button deleteBtm = workOutSerie.findViewById(R.id.Delete);
+
+        workOutSerie.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                deleteBtm.setVisibility(View.VISIBLE);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation exitAnim = new AlphaAnimation(1.0f, 0.0f);
+                        exitAnim.setDuration(500);
+                        exitAnim.setStartOffset(5000);
+                        exitAnim.setFillAfter(true);
+                        deleteBtm.startAnimation(exitAnim);
+                        deleteBtm.setVisibility(View.GONE);
+
+                    }
+                }, 2000);
+                return false;
+            }
+        });
+
+        deleteBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                notes.removeView(workOutSerie);
+                ResetSeriesList(notes);
+            }
+        });
+
+        sereisKgText.setText("" + savedSeriesValue + " X " + kg);
+        notes.addView(workOutSerie);
     }
 
     void CreateWorkoutNote(final LinearLayout notes, final int series, final float kgs){
