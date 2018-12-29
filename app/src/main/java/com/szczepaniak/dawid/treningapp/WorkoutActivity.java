@@ -18,14 +18,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,19 +28,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -55,12 +43,10 @@ public class WorkoutActivity extends AppCompatActivity {
     public int savedSeriesValue = 0;
     public float savedKgValue = 0f;
 
-   // private SaveManager saveManager;
     private ShowNotePopup showNotePopup;
     private TreningClass trening;
     private DrawerLayout drawerLayout;
     private FirebaseAuth mAuth;
-    private ArrayList<WorkoutDay> workoutDaysList;
 
     private String WORKOUT_NAME = "";
     private String TODAY_TIME = "";
@@ -73,7 +59,6 @@ public class WorkoutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
         workoutDays =  findViewById(R.id.WorkoutDays);
-        //saveManager = new SaveManager(this);
         dialog =  new Dialog(this);
         showNotePopup =  new ShowNotePopup(WorkoutActivity.this, dialog);
         mAuth = FirebaseAuth.getInstance();
@@ -138,17 +123,16 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         workoutDays.addView(layout);
-        //workoutDaysList.add(new WorkoutDay(TODAY_TIME));
 
         if (series != null) {
 
             for (Map.Entry<String, Object> serie : series.entrySet()) {
 
-                ArrayList<Long> workData = (ArrayList<Long>) serie.getValue();
+                ArrayList<String> workData = (ArrayList<String>) serie.getValue();
                 if(workData != null) {
-                    long r = (long)workData.get(0);
-                    long kg = (long)workData.get(1);
-                    LoadWorkoutNote(notesLayout, (int)r, (float)kg);
+                    String r = workData.get(0);
+                    String kg = workData.get(1);
+                    LoadWorkoutNote(notesLayout, r, kg);
                 }
             }
         }
@@ -179,16 +163,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         for (Map.Entry<String, Object> entry : workouts.entrySet()) {
 
-                            workoutsList.add(entry);
-                        }
-
-                        for(int i = 0; i < workouts.size(); i++){
-
-                            Map.Entry<String, Object> entry = workoutsList.get((workouts.size()-1) - i);
+                            //workoutsList.add(entry);
                             String key = entry.getKey();
                             Map<String, Object> series = (Map<String, Object>) entry.getValue();
                             CreateDayList(key, series);
                         }
+
+//                        for(int i = 0; i < workouts.size(); i++){
+//
+//                            Map.Entry<String, Object> entry = workoutsList.get((workouts.size()-1) - i);
+//                            String key = entry.getKey();
+//                            Map<String, Object> series = (Map<String, Object>) entry.getValue();
+//                            CreateDayList(key, series);
+//                        }
 
 
                         if (!workouts.containsKey(TODAY_TIME)) {
@@ -211,7 +198,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
-    void LoadWorkoutNote(final LinearLayout notes, final int series, final float kgs){
+    void LoadWorkoutNote(final LinearLayout notes, final String series, final String kgs){
 
         LayoutInflater inflater = LayoutInflater.from(WorkoutActivity.this);
         final LinearLayout workOutSerie = (LinearLayout) inflater.inflate(R.layout.workout_serie, null, false);
@@ -219,8 +206,8 @@ public class WorkoutActivity extends AppCompatActivity {
         TextView serieIndex = workOutSerie.findViewById(R.id.Index);
         int index = notes.getChildCount() + 1;
         serieIndex.setText("" + index);
-        savedKgValue = kgs;
-        savedSeriesValue = series;
+        savedKgValue = Float.parseFloat(kgs);
+        savedSeriesValue = Integer.parseInt(series);
         float afterNumber = savedKgValue  - (int)savedKgValue;
         String kg;
 
@@ -354,9 +341,9 @@ public class WorkoutActivity extends AppCompatActivity {
                         workoutNotes =  new HashMap<>();
                     }
 
-                    ArrayList<Long> newWorkNote = new ArrayList<>();
-                    newWorkNote.add((long)savedSeriesValue);
-                    newWorkNote.add((long)savedKgValue);
+                    ArrayList<String> newWorkNote = new ArrayList<>();
+                    newWorkNote.add("" + savedSeriesValue);
+                    newWorkNote.add("" + savedKgValue);
                     workoutNotes.put("" + (notes.getChildCount() - 1), newWorkNote);
                     workouts.put(workOutDate, workoutNotes);
 
@@ -386,24 +373,6 @@ public class WorkoutActivity extends AppCompatActivity {
             int index = i + 1;
             serieIndex.setText("" + index);
         }
-    }
-
-
-
-    public ArrayList<WorkoutDay> StringToArray( String string){
-
-        ArrayList<WorkoutDay> list;
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<WorkoutDay>>() {}.getType();
-        list = gson.fromJson(string, type);
-        return list;
-    }
-
-
-    public String ArrayToString(ArrayList<WorkoutDay> list){
-
-        Gson gson = new Gson();
-        return gson.toJson(list);
     }
 }
 
