@@ -216,7 +216,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         workOutSerie.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(final View v) {
                 deleteBtm.setVisibility(View.VISIBLE);
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -228,7 +228,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         exitAnim.setFillAfter(true);
                         deleteBtm.startAnimation(exitAnim);
                         deleteBtm.setVisibility(View.GONE);
-                        DeleteWorkoutNote(notes, workOutSerie);
+                        DeleteWorkoutNote(notes, workOutSerie, v);
 
 
                     }
@@ -250,7 +250,7 @@ public class WorkoutActivity extends AppCompatActivity {
         notes.addView(workOutSerie);
     }
 
-    void DeleteWorkoutNote(final LinearLayout notes, final LinearLayout workOutSerie ){
+    void DeleteWorkoutNote(final LinearLayout notes, final LinearLayout workOutSerie, final View deletedView){
 
         final FirebaseUser user = mAuth.getCurrentUser();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -265,34 +265,27 @@ public class WorkoutActivity extends AppCompatActivity {
                 View parent = (View) notes.getParent().getParent();
                 TextView dateText = parent.findViewById(R.id.Date);
                 String workOutDate = dateText.getText().toString();
-                ArrayList<View> noteChilds = new ArrayList<>();
-
-                for(int i = 0; i < notes.getChildCount(); i++){
-
-                    noteChilds.add(notes.getChildAt(i));
-                }
-                int workoutNoteIndex = noteChilds.indexOf(workOutSerie);
+                TextView indexText = deletedView.findViewById(R.id.Index);
+                int index = Integer.parseInt(indexText.getText().toString()) - 1;
 
                 if (documentSnapshot.exists()) {
 
-                    HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(workOutDate);
-                    //HashMap<String, Object> workouts = (HashMap<String, Object>) workoutsNames.get(workOutDate);
+                    HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
+                    ArrayList<HashMap<String, Object>> workoutNotes = (ArrayList<HashMap<String, Object>>)workouts.get(workOutDate);
 
-                    if (workouts != null) {
+                    workoutNotes.remove(index);
+                    workouts.put(workOutDate, workoutNotes);
 
-                        workouts.remove("0");
-//                        HashMap<String, Object> finishMap = new HashMap<>();
-//                        finishMap.put(workOutDate, workouts);
+                    HashMap<String, Object> finishMap = new HashMap<>();
+                    finishMap.put(WORKOUT_NAME, workouts);
 
-                        documentReference.set(workouts, SetOptions.merge())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
+                    documentReference.set(finishMap, SetOptions.merge())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
 
-                                    }
-                                });
-                    }
-
+                                }
+                            });
                 }
             }
         });
@@ -370,9 +363,6 @@ public class WorkoutActivity extends AppCompatActivity {
                 String workOutDate = dateText.getText().toString();
 
                 if (documentSnapshot.exists()) {
-
-
-                   // List<HashMap<String, Object>> TEST = (List<HashMap<String, Object>>)documentSnapshot.get(workOutDate);
 
 
                     HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
