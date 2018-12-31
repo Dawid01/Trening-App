@@ -32,15 +32,20 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -444,109 +449,67 @@ public class WorkoutActivity extends AppCompatActivity {
        View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
                null);
        PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
-               LinearLayout.LayoutParams.FILL_PARENT, true);
+               LinearLayout.LayoutParams.WRAP_CONTENT, true);
        graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
        graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
 
        GraphView graph = popUpView.findViewById(R.id.Graph);
-       LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-               new DataPoint(0, 1),
-               new DataPoint(1, 5),
-               new DataPoint(2, 3),
-               new DataPoint(3, 2),
-               new DataPoint(4, 7),
-               new DataPoint(5, 1),
-               new DataPoint(6, 5),
-               new DataPoint(7, 3),
-               new DataPoint(8, 2),
-               new DataPoint(9, 6),
+       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-       });
-       LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[] {
-               new DataPoint(0, 7),
-               new DataPoint(1, 4),
-               new DataPoint(2, 7),
-               new DataPoint(3, 8),
-               new DataPoint(4, 6),
-               new DataPoint(5, 3),
-               new DataPoint(6, 4),
-               new DataPoint(7, 2),
-               new DataPoint(8, 9),
-               new DataPoint(9, 3),
+       ArrayList<Date> dates =  new ArrayList<>();
 
-       });
+       for(int i = 0; i < 10; i++){
 
-       LineGraphSeries<DataPoint> series3 = new LineGraphSeries<>(new DataPoint[] {
-               new DataPoint(0, 2),
-               new DataPoint(1, 6),
-               new DataPoint(2, 1),
-               new DataPoint(3, 2),
-               new DataPoint(4, 5),
-               new DataPoint(5, 7),
-               new DataPoint(6, 3),
-               new DataPoint(7, 4),
-               new DataPoint(8, 1),
-               new DataPoint(9, 8),
+           try {
+               Date d = sdf.parse(26 + i + ".12.2018");
+               dates.add(d);
+           } catch (ParseException ex) {
+           }
+       }
 
-       });
+           LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
+                   new DataPoint(dates.get(0), 56),
+                   new DataPoint(dates.get(1), 70),
+                   new DataPoint(dates.get(2), 100),
+                   new DataPoint(dates.get(3), 135),
+                   new DataPoint(dates.get(4), 150),
+                   new DataPoint(dates.get(5), 56),
+                   new DataPoint(dates.get(6), 70),
+                   new DataPoint(dates.get(7), 100),
+                   new DataPoint(dates.get(8), 135),
+                   new DataPoint(dates.get(9), 150),
 
-       LineGraphSeries<DataPoint> series4 = new LineGraphSeries<>(new DataPoint[] {
-               new DataPoint(0, 0),
-               new DataPoint(1, 3),
-               new DataPoint(2, 2),
-               new DataPoint(3, 5),
-               new DataPoint(4, 6),
-               new DataPoint(5, 3),
-               new DataPoint(6, 2),
-               new DataPoint(7, 7),
-               new DataPoint(8, 3),
-               new DataPoint(9, 20),
+           });
 
-       });
+
+
        series.setColor(Color.parseColor("#ffa000"));
-       series.setTitle("28.12.2018");
+       series.setTitle(WORKOUT_NAME);
        series.setDrawDataPoints(true);
        series.setDataPointsRadius(10);
-       series.setThickness(8);
+       series.setThickness(4);
 
-       series2.setColor(Color.parseColor("#c67100"));
-       series2.setTitle("29.12.2018");
-       series2.setDrawDataPoints(true);
-       series2.setDataPointsRadius(10);
-       series2.setThickness(8);
 
-       series3.setColor(Color.parseColor("#a86000"));
-       series3.setTitle("30.12.2018");
-       series3.setDrawDataPoints(true);
-       series3.setDataPointsRadius(10);
-       series3.setThickness(8);
+       graph.setCursorMode(true);
+       graph.getGridLabelRenderer().setHumanRounding(false);
+       graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
 
-       series4.setColor(Color.parseColor("#724100"));
-       series4.setTitle("01.01.2019");
-       series4.setDrawDataPoints(true);
-       series4.setDataPointsRadius(10);
-       series4.setThickness(8);
 
-       //graph.setCursorMode(true);
-       graph.getViewport().setScrollable(true);
-       graph.getViewport().setScrollableY(true);
-       graph.getViewport().setScalable(true);
-       graph.getViewport().setScalableY(true);
-
-       graph.getViewport().setYAxisBoundsManual(true);
-       graph.getViewport().setMinY(0);
-       graph.getViewport().setMaxY(12);
-
-       graph.getViewport().setXAxisBoundsManual(true);
-       graph.getViewport().setMinX(0);
-       graph.getViewport().setMaxX(8);
-
-       graph.getLegendRenderer().setVisible(true);
-       graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
        graph.addSeries(series);
-       graph.addSeries(series2);
-       graph.addSeries(series3);
-       graph.addSeries(series4);
+
+       final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
+       graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+           @Override
+           public String formatLabel(double value, boolean isValueX) {
+               if (isValueX) {
+
+                  return dateTimeFormatter.format(new Date((long) value));
+
+               } else {
+                   return super.formatLabel(value, isValueX) + " p ";
+               }
+           }
+       });
 
    }
 
