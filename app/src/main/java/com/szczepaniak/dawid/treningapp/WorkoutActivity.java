@@ -12,13 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +32,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,6 +103,13 @@ public class WorkoutActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.graph_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -101,6 +117,12 @@ public class WorkoutActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        }
+
+
+        if (id == R.id.ShowGraph) {
+
+            ShowWorkoutsGraph();
         }
 
         return super.onOptionsItemSelected(item);
@@ -163,13 +185,16 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         for (Map.Entry<String, Object> entry : workouts.entrySet()) {
 
-                            //workoutsList.add(entry);
+                            workoutsList.add(entry);
+
+                        }
+
+                        for(int i = 0; i < workoutsList.size(); i++){
+                            Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i)- 1);
                             String key = entry.getKey();
                             ArrayList<HashMap<String, Object>> series = (ArrayList<HashMap<String, Object>>) entry.getValue();
                             CreateDayList(key, series);
                         }
-
-
 
 
                         if (!workouts.containsKey(TODAY_TIME)) {
@@ -413,6 +438,118 @@ public class WorkoutActivity extends AppCompatActivity {
             serieIndex.setText("" + index);
         }
     }
+
+   void ShowWorkoutsGraph(){
+
+       View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
+               null);
+       PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
+               LinearLayout.LayoutParams.FILL_PARENT, true);
+       graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
+       graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
+
+       GraphView graph = popUpView.findViewById(R.id.Graph);
+       LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+               new DataPoint(0, 1),
+               new DataPoint(1, 5),
+               new DataPoint(2, 3),
+               new DataPoint(3, 2),
+               new DataPoint(4, 7),
+               new DataPoint(5, 1),
+               new DataPoint(6, 5),
+               new DataPoint(7, 3),
+               new DataPoint(8, 2),
+               new DataPoint(9, 6),
+
+       });
+       LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[] {
+               new DataPoint(0, 7),
+               new DataPoint(1, 4),
+               new DataPoint(2, 7),
+               new DataPoint(3, 8),
+               new DataPoint(4, 6),
+               new DataPoint(5, 3),
+               new DataPoint(6, 4),
+               new DataPoint(7, 2),
+               new DataPoint(8, 9),
+               new DataPoint(9, 3),
+
+       });
+
+       LineGraphSeries<DataPoint> series3 = new LineGraphSeries<>(new DataPoint[] {
+               new DataPoint(0, 2),
+               new DataPoint(1, 6),
+               new DataPoint(2, 1),
+               new DataPoint(3, 2),
+               new DataPoint(4, 5),
+               new DataPoint(5, 7),
+               new DataPoint(6, 3),
+               new DataPoint(7, 4),
+               new DataPoint(8, 1),
+               new DataPoint(9, 8),
+
+       });
+
+       LineGraphSeries<DataPoint> series4 = new LineGraphSeries<>(new DataPoint[] {
+               new DataPoint(0, 0),
+               new DataPoint(1, 3),
+               new DataPoint(2, 2),
+               new DataPoint(3, 5),
+               new DataPoint(4, 6),
+               new DataPoint(5, 3),
+               new DataPoint(6, 2),
+               new DataPoint(7, 7),
+               new DataPoint(8, 3),
+               new DataPoint(9, 20),
+
+       });
+       series.setColor(Color.parseColor("#ffa000"));
+       series.setTitle("28.12.2018");
+       series.setDrawDataPoints(true);
+       series.setDataPointsRadius(10);
+       series.setThickness(8);
+
+       series2.setColor(Color.parseColor("#c67100"));
+       series2.setTitle("29.12.2018");
+       series2.setDrawDataPoints(true);
+       series2.setDataPointsRadius(10);
+       series2.setThickness(8);
+
+       series3.setColor(Color.parseColor("#a86000"));
+       series3.setTitle("30.12.2018");
+       series3.setDrawDataPoints(true);
+       series3.setDataPointsRadius(10);
+       series3.setThickness(8);
+
+       series4.setColor(Color.parseColor("#724100"));
+       series4.setTitle("01.01.2019");
+       series4.setDrawDataPoints(true);
+       series4.setDataPointsRadius(10);
+       series4.setThickness(8);
+
+       //graph.setCursorMode(true);
+       graph.getViewport().setScrollable(true);
+       graph.getViewport().setScrollableY(true);
+       graph.getViewport().setScalable(true);
+       graph.getViewport().setScalableY(true);
+
+       graph.getViewport().setYAxisBoundsManual(true);
+       graph.getViewport().setMinY(0);
+       graph.getViewport().setMaxY(12);
+
+       graph.getViewport().setXAxisBoundsManual(true);
+       graph.getViewport().setMinX(0);
+       graph.getViewport().setMaxX(8);
+
+       graph.getLegendRenderer().setVisible(true);
+       graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+       graph.addSeries(series);
+       graph.addSeries(series2);
+       graph.addSeries(series3);
+       graph.addSeries(series4);
+
+   }
+
 }
 
 
