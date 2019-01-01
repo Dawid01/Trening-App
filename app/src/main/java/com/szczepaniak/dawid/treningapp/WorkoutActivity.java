@@ -49,6 +49,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -180,22 +182,26 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 if (documentSnapshot.exists()) {
 
-                    Map<String, Object> workouts = (Map<String, Object>) documentSnapshot.get(WORKOUT_NAME);
+                    HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
+                    TreeMap<String, Object> sortedWorouts = new TreeMap<>();
+
+                    sortedWorouts.putAll(workouts);
+
+                    if (sortedWorouts != null) {
 
 
-                    if (workouts != null) {
+                        ArrayList<HashMap.Entry<String, Object>> workoutsList = new ArrayList<>();
 
 
-                        ArrayList<Map.Entry<String, Object>> workoutsList = new ArrayList<>();
-
-                        for (Map.Entry<String, Object> entry : workouts.entrySet()) {
+                        for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
 
                             workoutsList.add(entry);
 
                         }
 
                         for(int i = 0; i < workoutsList.size(); i++){
-                            Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i)- 1);
+                            //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i)- 1);
+                            Map.Entry<String, Object> entry = workoutsList.get(i);
                             String key = entry.getKey();
                             ArrayList<HashMap<String, Object>> series = (ArrayList<HashMap<String, Object>>) entry.getValue();
                             CreateDayList(key, series);
@@ -446,70 +452,99 @@ public class WorkoutActivity extends AppCompatActivity {
 
    void ShowWorkoutsGraph(){
 
-       View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
-               null);
-       PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
-               LinearLayout.LayoutParams.WRAP_CONTENT, true);
-       graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
-       graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
-
-       GraphView graph = popUpView.findViewById(R.id.Graph);
-       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
-       ArrayList<Date> dates =  new ArrayList<>();
-
-       for(int i = 0; i < 10; i++){
-
-           try {
-               Date d = sdf.parse(26 + i + ".12.2018");
-               dates.add(d);
-           } catch (ParseException ex) {
-           }
-       }
-
-           LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
-                   new DataPoint(dates.get(0), 56),
-                   new DataPoint(dates.get(1), 70),
-                   new DataPoint(dates.get(2), 100),
-                   new DataPoint(dates.get(3), 135),
-                   new DataPoint(dates.get(4), 150),
-                   new DataPoint(dates.get(5), 56),
-                   new DataPoint(dates.get(6), 70),
-                   new DataPoint(dates.get(7), 100),
-                   new DataPoint(dates.get(8), 135),
-                   new DataPoint(dates.get(9), 150),
-
-           });
+       final FirebaseUser user = mAuth.getCurrentUser();
+       final FirebaseFirestore db = FirebaseFirestore.getInstance();
+       documentReference = db.collection("Users").document(user.getUid());
 
 
-
-       series.setColor(Color.parseColor("#ffa000"));
-       series.setTitle(WORKOUT_NAME);
-       series.setDrawDataPoints(true);
-       series.setDataPointsRadius(10);
-       series.setThickness(4);
-
-
-       graph.setCursorMode(true);
-       graph.getGridLabelRenderer().setHumanRounding(false);
-       graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-
-
-       graph.addSeries(series);
-
-       final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
-       graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+       documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
            @Override
-           public String formatLabel(double value, boolean isValueX) {
-               if (isValueX) {
+           public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                  return dateTimeFormatter.format(new Date((long) value));
+               if (documentSnapshot.exists()) {
 
-               } else {
-                   return super.formatLabel(value, isValueX) + " p ";
+
+                   HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
+                   TreeMap<String, Object> sortedWorouts = new TreeMap<>();
+                   sortedWorouts.putAll(workouts);
+
+                   if (sortedWorouts == null) {
+
+                       sortedWorouts = new TreeMap<>();
+                   }
+
+                   View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
+                           null);
+                   PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
+                           LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                   graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
+                   graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
+
+                   GraphView graph = popUpView.findViewById(R.id.Graph);
+                   SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
+                   ArrayList<Date> dates =  new ArrayList<>();
+
+                   ArrayList<Map.Entry<String, Object>> workoutsList = new ArrayList<>();
+                   LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                   for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
+
+                       workoutsList.add(entry);
+
+
+                   }
+
+                   DataPoint[] dataPoints =  new DataPoint[workoutsList.size()];
+                   for(int i = 0; i < workoutsList.size(); i++){
+                       try {
+
+                           //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i) - 1);
+                           Map.Entry<String, Object> entry = workoutsList.get(i);
+                           String key = entry.getKey();
+                           Date d = sdf.parse(key);
+                           Random random = new Random();
+                           dataPoints[i] = new DataPoint(d, random.nextInt(100));
+
+
+                       }catch (ParseException e){
+
+                       }
+
+                   }
+
+                   series = new LineGraphSeries<DataPoint>(dataPoints);
+
+                   series.setColor(Color.parseColor("#ffa000"));
+                   series.setTitle(WORKOUT_NAME);
+                   series.setDrawDataPoints(true);
+                   series.setDataPointsRadius(10);
+                   series.setThickness(4);
+
+
+                   graph.setCursorMode(true);
+                   graph.getGridLabelRenderer().setHumanRounding(false);
+                   graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
+
+
+                   graph.addSeries(series);
+
+                   final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
+                   graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                       @Override
+                       public String formatLabel(double value, boolean isValueX) {
+                           if (isValueX) {
+
+                               return dateTimeFormatter.format(new Date((long) value));
+
+                           } else {
+                               return super.formatLabel(value, isValueX) + " p ";
+                           }
+                       }
+                   });
                }
            }
        });
+
 
    }
 
