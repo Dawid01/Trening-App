@@ -495,6 +495,8 @@ public class WorkoutActivity extends AppCompatActivity {
                    }
 
                    DataPoint[] dataPoints =  new DataPoint[workoutsList.size()];
+
+
                    for(int i = 0; i < workoutsList.size(); i++){
                        try {
 
@@ -502,7 +504,11 @@ public class WorkoutActivity extends AppCompatActivity {
                            Map.Entry<String, Object> entry = workoutsList.get(i);
                            String key = entry.getKey();
                            Date d = sdf.parse(key);
+                           dates.add(d);
                            Random random = new Random();
+
+
+
                            dataPoints[i] = new DataPoint(d, random.nextInt(100));
 
 
@@ -512,21 +518,29 @@ public class WorkoutActivity extends AppCompatActivity {
 
                    }
 
-                   series = new LineGraphSeries<DataPoint>(dataPoints);
+                   series = new LineGraphSeries<>(dataPoints);
 
                    series.setColor(Color.parseColor("#ffa000"));
                    series.setTitle(WORKOUT_NAME);
                    series.setDrawDataPoints(true);
-                   series.setDataPointsRadius(10);
+                   //series.setDataPointsRadius(10);
                    series.setThickness(4);
 
+                   series.setBackgroundColor(Color.argb(50, 255, 209, 73));
+
+                   series.setDrawBackground(true);
 
                    graph.setCursorMode(true);
-                   graph.getGridLabelRenderer().setHumanRounding(false);
-                   graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-
-
                    graph.addSeries(series);
+                   graph.getGridLabelRenderer().setHumanRounding(false);
+                   graph.getGridLabelRenderer().setNumHorizontalLabels(dates.size());
+                   graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
+                   graph.getGridLabelRenderer().setTextSize(12);
+                   graph.getViewport().setMinX(dates.get(0).getTime());
+                   graph.getViewport().setMaxX(dates.get(dates.size() - 1).getTime()+2);
+                   graph.getViewport().setXAxisBoundsManual(true);
+                   graph.getCursorMode().setBackgroundColor(Color.argb(130, 255, 209, 73));
+                   //graph.getCursorMode().setTextColor(Color.WHITE);
 
                    final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
                    graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
@@ -537,7 +551,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                return dateTimeFormatter.format(new Date((long) value));
 
                            } else {
-                               return super.formatLabel(value, isValueX) + " p ";
+                               return super.formatLabel(value, isValueX) + " score ";
                            }
                        }
                    });
