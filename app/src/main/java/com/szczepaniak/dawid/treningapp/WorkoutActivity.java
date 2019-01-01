@@ -185,40 +185,46 @@ public class WorkoutActivity extends AppCompatActivity {
                     HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
                     TreeMap<String, Object> sortedWorouts = new TreeMap<>();
 
-                    sortedWorouts.putAll(workouts);
-
-                    if (sortedWorouts != null) {
-
-
-                        ArrayList<HashMap.Entry<String, Object>> workoutsList = new ArrayList<>();
+                    if (workouts != null) {
+                        sortedWorouts.putAll(workouts);
 
 
-                        for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
-
-                            workoutsList.add(entry);
-
-                        }
-
-                        for(int i = 0; i < workoutsList.size(); i++){
-                            //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i)- 1);
-                            Map.Entry<String, Object> entry = workoutsList.get(i);
-                            String key = entry.getKey();
-                            ArrayList<HashMap<String, Object>> series = (ArrayList<HashMap<String, Object>>) entry.getValue();
-                            CreateDayList(key, series);
-                        }
+                        if (sortedWorouts != null) {
 
 
-                        if (!workouts.containsKey(TODAY_TIME)) {
+                            ArrayList<HashMap.Entry<String, Object>> workoutsList = new ArrayList<>();
+
+
+                            for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
+
+                                workoutsList.add(entry);
+
+                            }
+
+                            for (int i = 0; i < workoutsList.size(); i++) {
+                                //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i)- 1);
+                                Map.Entry<String, Object> entry = workoutsList.get(i);
+                                String key = entry.getKey();
+                                ArrayList<HashMap<String, Object>> series = (ArrayList<HashMap<String, Object>>) entry.getValue();
+                                CreateDayList(key, series);
+                            }
+
+
+                            if (!workouts.containsKey(TODAY_TIME)) {
+
+                                CreateDayList(TODAY_TIME, null);
+                            }
+
+                        } else {
 
                             CreateDayList(TODAY_TIME, null);
                         }
+
 
                     } else {
 
                         CreateDayList(TODAY_TIME, null);
                     }
-
-
                 }else {
 
                     CreateDayList(TODAY_TIME, null);
@@ -465,96 +471,109 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
                    HashMap<String, Object> workouts = (HashMap<String, Object>) documentSnapshot.get(WORKOUT_NAME);
-                   TreeMap<String, Object> sortedWorouts = new TreeMap<>();
-                   sortedWorouts.putAll(workouts);
+                   if (workouts != null) {
+                       TreeMap<String, Object> sortedWorouts = new TreeMap<>();
+                       sortedWorouts.putAll(workouts);
 
-                   if (sortedWorouts == null) {
+                       if (sortedWorouts == null) {
 
-                       sortedWorouts = new TreeMap<>();
-                   }
+                           sortedWorouts = new TreeMap<>();
+                       }
 
-                   View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
-                           null);
-                   PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
-                           LinearLayout.LayoutParams.WRAP_CONTENT, true);
-                   graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
-                   graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
+                       View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
+                               null);
+                       PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
+                               LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                       graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
+                       graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
 
-                   GraphView graph = popUpView.findViewById(R.id.Graph);
-                   SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                       GraphView graph = popUpView.findViewById(R.id.Graph);
+                       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-                   ArrayList<Date> dates =  new ArrayList<>();
+                       ArrayList<Date> dates = new ArrayList<>();
 
-                   ArrayList<Map.Entry<String, Object>> workoutsList = new ArrayList<>();
-                   LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
-                   for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
+                       ArrayList<Map.Entry<String, Object>> workoutsList = new ArrayList<>();
+                       LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+                       for (Map.Entry<String, Object> entry : sortedWorouts.entrySet()) {
 
-                       workoutsList.add(entry);
+                           workoutsList.add(entry);
 
-
-                   }
-
-                   DataPoint[] dataPoints =  new DataPoint[workoutsList.size()];
-
-
-                   for(int i = 0; i < workoutsList.size(); i++){
-                       try {
-
-                           //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i) - 1);
-                           Map.Entry<String, Object> entry = workoutsList.get(i);
-                           String key = entry.getKey();
-                           Date d = sdf.parse(key);
-                           dates.add(d);
-                           Random random = new Random();
-
-
-
-                           dataPoints[i] = new DataPoint(d, random.nextInt(100));
-
-
-                       }catch (ParseException e){
 
                        }
 
-                   }
+                       DataPoint[] dataPoints = new DataPoint[workoutsList.size()];
 
-                   series = new LineGraphSeries<>(dataPoints);
 
-                   series.setColor(Color.parseColor("#ffa000"));
-                   series.setTitle(WORKOUT_NAME);
-                   series.setDrawDataPoints(true);
-                   //series.setDataPointsRadius(10);
-                   series.setThickness(4);
+                       for (int i = 0; i < workoutsList.size(); i++) {
+                           try {
 
-                   series.setBackgroundColor(Color.argb(50, 255, 209, 73));
+                               //Map.Entry<String, Object> entry = workoutsList.get((workoutsList.size() - i) - 1);
+                               Map.Entry<String, Object> entry = workoutsList.get(i);
+                               String key = entry.getKey();
+                               Date d = sdf.parse(key);
+                               dates.add(d);
+                               Random random = new Random();
 
-                   series.setDrawBackground(true);
+                               double sumeSeries = 0;
 
-                   graph.setCursorMode(true);
-                   graph.addSeries(series);
-                   graph.getGridLabelRenderer().setHumanRounding(false);
-                   graph.getGridLabelRenderer().setNumHorizontalLabels(dates.size());
-                   graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-                   graph.getGridLabelRenderer().setTextSize(12);
-                   graph.getViewport().setMinX(dates.get(0).getTime());
-                   graph.getViewport().setMaxX(dates.get(dates.size() - 1).getTime()+2);
-                   graph.getViewport().setXAxisBoundsManual(true);
-                   graph.getCursorMode().setBackgroundColor(Color.argb(130, 255, 209, 73));
-                   //graph.getCursorMode().setTextColor(Color.WHITE);
+                               ArrayList<HashMap<String, Object>> s = (ArrayList<HashMap<String, Object>>) entry.getValue();
 
-                   final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
-                   graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-                       @Override
-                       public String formatLabel(double value, boolean isValueX) {
-                           if (isValueX) {
+                               for (int j = 0; j < s.size(); j++) {
 
-                               return dateTimeFormatter.format(new Date((long) value));
+                                   HashMap<String, Object> serie = s.get(j);
+                                   float kgs = Float.parseFloat((String) serie.get("kgs"));
+                                   float r = Float.parseFloat((String) serie.get("r"));
+                                   sumeSeries = sumeSeries + ((kgs * r));
 
-                           } else {
-                               return super.formatLabel(value, isValueX) + " score ";
+                               }
+
+                               dataPoints[i] = new DataPoint(d, sumeSeries);
+
+
+                           } catch (ParseException e) {
+
                            }
+
                        }
-                   });
+
+                       series = new LineGraphSeries<>(dataPoints);
+
+                       series.setColor(Color.parseColor("#ffa000"));
+                       series.setTitle(WORKOUT_NAME);
+                       series.setDrawDataPoints(true);
+                       //series.setDataPointsRadius(10);
+                       series.setThickness(4);
+
+                       series.setBackgroundColor(Color.argb(50, 255, 209, 73));
+
+                       series.setDrawBackground(true);
+
+                       graph.setCursorMode(true);
+                       graph.addSeries(series);
+                       graph.getGridLabelRenderer().setHumanRounding(false);
+                       graph.getGridLabelRenderer().setNumHorizontalLabels(dates.size());
+                       graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
+                       graph.getGridLabelRenderer().setTextSize(12);
+                       graph.getViewport().setMinX(dates.get(0).getTime());
+                       graph.getViewport().setMaxX(dates.get(dates.size() - 1).getTime() + 2);
+                       graph.getViewport().setXAxisBoundsManual(true);
+                       graph.getCursorMode().setBackgroundColor(Color.argb(130, 255, 209, 73));
+                       //graph.getCursorMode().setTextColor(Color.WHITE);
+
+                       final DateFormat dateTimeFormatter = DateFormat.getDateInstance();
+                       graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                           @Override
+                           public String formatLabel(double value, boolean isValueX) {
+                               if (isValueX) {
+
+                                   return dateTimeFormatter.format(new Date((long) value));
+
+                               } else {
+                                   return super.formatLabel(value, isValueX) + " score ";
+                               }
+                           }
+                       });
+                   }
                }
            }
        });
