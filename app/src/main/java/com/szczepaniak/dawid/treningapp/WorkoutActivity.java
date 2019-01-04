@@ -482,8 +482,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
                        View popUpView = getLayoutInflater().inflate(R.layout.graph_layout,
                                null);
-                       PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.FILL_PARENT,
-                               LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                       PopupWindow graphPopup = new PopupWindow(popUpView, LinearLayout.LayoutParams.MATCH_PARENT,
+                               LinearLayout.LayoutParams.MATCH_PARENT, true);
                        graphPopup.setAnimationStyle(android.R.style.Animation_Dialog);
                        graphPopup.showAtLocation(popUpView, Gravity.CENTER, 0, 0);
 

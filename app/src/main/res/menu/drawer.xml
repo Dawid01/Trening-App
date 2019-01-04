@@ -2,16 +2,21 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@+id/nav_account"
-        android:checked="true"
-        android:icon="@drawable/account"
-        android:title="My Acount" />
+    <!--<item-->
+        <!--android:id="@+id/nav_account"-->
+        <!--android:checked="true"-->
+        <!--android:icon="@drawable/account"-->
+        <!--android:title="My Acount" />-->
     <item
         android:id="@+id/nav_maps"
         android:checked="true"
         android:icon="@drawable/mapicon"
         android:title="Find gym" />
+    <item
+        android:id="@+id/bmi_calculator"
+        android:checked="true"
+        android:icon="@drawable/calculator"
+        android:title="BMI Calculator" />
     <item
         android:id="@+id/nav_settings"
         android:checked="true"

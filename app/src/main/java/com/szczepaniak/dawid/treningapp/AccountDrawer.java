@@ -67,7 +67,7 @@ public class AccountDrawer implements NavigationView.OnNavigationItemSelectedLis
 
         switch (item.getItemId()) {
 
-            case R.id.nav_singout: {
+            case R.id.nav_singout:
                 Toast.makeText(context, "Sing out", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 Intent loginActivity = new Intent(context, LoginActivity.class);
@@ -75,14 +75,20 @@ public class AccountDrawer implements NavigationView.OnNavigationItemSelectedLis
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 activity.finish();
                 break;
-            }
-            case R.id.nav_maps: {
 
-                Intent loginActivity = new Intent(context, MapActivity.class);
-                context.startActivity(loginActivity);
+            case R.id.nav_maps:
+
+                Intent login = new Intent(context, MapActivity.class);
+                context.startActivity(login);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 break;
-            }
+            case R.id.bmi_calculator:
+
+                Intent calculator = new Intent(context, BMICalculator.class);
+                context.startActivity(calculator);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                break;
+
         }
         return true;
     }
