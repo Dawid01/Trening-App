@@ -2,6 +2,7 @@ package com.szczepaniak.dawid.treningapp;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -71,6 +73,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        new ThemeListner(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -538,13 +541,16 @@ public class WorkoutActivity extends AppCompatActivity {
 
                        series = new LineGraphSeries<>(dataPoints);
 
-                       series.setColor(Color.parseColor("#ffa000"));
+                       //series.setColor(Color.parseColor("#424242"));
+                       //series.setColor(getTheme().getResources().getColor(R.attr.colorAccent));
+                       series.setColor(new ThemeListner(WorkoutActivity.this).getThemeColor());
                        series.setTitle(WORKOUT_NAME);
                        series.setDrawDataPoints(true);
                        //series.setDataPointsRadius(10);
                        series.setThickness(4);
-
-                       series.setBackgroundColor(Color.argb(50, 255, 209, 73));
+                       int c = new ThemeListner(WorkoutActivity.this).getThemeColor();
+                       int color = Color.argb(50, Color.red(c), Color.green(c), Color.blue(c));
+                       series.setBackgroundColor(color);
 
                        series.setDrawBackground(true);
 
@@ -557,7 +563,8 @@ public class WorkoutActivity extends AppCompatActivity {
                        graph.getViewport().setMinX(dates.get(0).getTime());
                        graph.getViewport().setMaxX(dates.get(dates.size() - 1).getTime() + 2);
                        graph.getViewport().setXAxisBoundsManual(true);
-                       graph.getCursorMode().setBackgroundColor(Color.argb(130, 255, 209, 73));
+
+                       graph.getCursorMode().setBackgroundColor(color);
                        //graph.getCursorMode().setTextColor(Color.WHITE);
 
                        final DateFormat dateTimeFormatter = DateFormat.getDateInstance();

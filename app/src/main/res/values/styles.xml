@@ -1,10 +1,111 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">#ffa000</item>
+        <item name="colorPrimaryDark">#c67100</item>
+        <item name="colorAccent">#ffd149</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#20c56000</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
 
+    <style name="Gray" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#424242</item>
+        <item name="colorPrimaryDark">#1b1b1b</item>
+        <item name="colorAccent">#6d6d6d</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#1b1b1b</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Blue" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#00b0ff</item>
+        <item name="colorPrimaryDark">#0081cb</item>
+        <item name="colorAccent">#69e2ff</item>
+        <item name="colorText">#000000</item>
+        <item name="colorScroll">#0081cb</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Red" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#d32f2f</item>
+        <item name="colorPrimaryDark">#9a0007</item>
+        <item name="colorAccent">#ff6659</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#9a0007</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Pink" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#d81b60</item>
+        <item name="colorPrimaryDark">#a00037</item>
+        <item name="colorAccent">#ff5c8d</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#a00037</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Purple" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#8e24aa</item>
+        <item name="colorPrimaryDark">#5c007a</item>
+        <item name="colorAccent">#c158dc</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#5c007a</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Indigo" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#3f51b5</item>
+        <item name="colorPrimaryDark">#002984</item>
+        <item name="colorAccent">#757de8</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#002984</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Teal" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#00796b</item>
+        <item name="colorPrimaryDark">#004c40</item>
+        <item name="colorAccent">#48a999</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#004c40</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Green" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#00c853</item>
+        <item name="colorPrimaryDark">#009624</item>
+        <item name="colorAccent">#5efc82</item>
+        <item name="colorText">#000000</item>
+        <item name="colorScroll">#009624</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Yellow" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#fdd835</item>
+        <item name="colorPrimaryDark">#c6a700</item>
+        <item name="colorAccent">#ffff6b</item>
+        <item name="colorText">#000000</item>
+        <item name="colorScroll">#c6a700</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Brown" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#6d4c41</item>
+        <item name="colorPrimaryDark">#40241a</item>
+        <item name="colorAccent">#9c786c</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#40241a</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
+    </style>
+
+    <style name="Black" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">#484848</item>
+        <item name="colorText">#ffffff</item>
+        <item name="colorScroll">#000000</item>
+        <item name="android:windowAnimationStyle">@style/ThemeAnimation</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,25 +117,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-
-    <!--<style name="AppTheme.ErrorText" parent="TextAppearance.AppCompat">-->
-        <!--<item name="android:textColor">@android:color/red</item>-->
-        <!--<item name="android:textSize">16sp</item>-->
-    <!--</style>-->
-
-    <!--<style name="AppTheme.HintText" parent="TextAppearance.AppCompat">-->
-        <!--<item name="android:textColor">@color/colorPrimary</item>-->
-        <!--<item name="android:textSize">14sp</item>-->
-    <!--</style>-->
-
-    <!--<style name="AppTheme.TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">-->
-        <!--<item name="hintTextAppearance">@style/AppTheme.HintText</item>-->
-        <!--<item name="errorTextAppearance">@style/AppTheme.ErrorText</item>-->
-        <!--<item name="android:textColor">@color/colorPrimary</item>-->
-        <!--<item name="android:textColorHint">@color/colorPrimary</item>-->
-        <!--<item name="colorControlNormal">@color/colorAccent</item>-->
-        <!--<item name="colorControlActivated">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorControlHighlight">@color/colorPrimaryDark</item>-->
-    <!--</style>-->
+    <style name="ThemeAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 
 </resources>

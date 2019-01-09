@@ -10,7 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:background="?attr/colorPrimaryDark">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -24,18 +24,18 @@
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="?attr/colorPrimaryDark"
                 app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="?attr/colorAccent"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/colorPrimaryDark"
-                app:tabTextColor="@color/cardview_light_background">
+                app:tabSelectedTextColor="?attr/colorPrimaryDark"
+                app:tabTextColor="?attr/colorText">
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/All"
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="448dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="?attr/colorPrimaryDark"
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -134,9 +134,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:headerLayout="@layout/muscles_drawer"
-        app:itemTextColor="@color/colorPrimaryDark" />
+        app:itemTextColor="?attr/colorPrimaryDark" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -145,7 +145,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
-        app:itemTextColor="@color/colorPrimaryDark"
+        app:itemTextColor="?attr/colorPrimaryDark"
         app:menu="@menu/drawer" />
 
 

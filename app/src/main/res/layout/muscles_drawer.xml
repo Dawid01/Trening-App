@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="?attr/colorPrimary">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:background="@color/colorPrimary">
+        android:background="?attr/colorPrimary">
 
         <ImageView
             android:id="@+id/AbdonemDrawer"
@@ -106,6 +106,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="- can work out "
+        android:textColor="?attr/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -122,6 +123,7 @@
         android:layout_marginStart="27dp"
         android:layout_marginTop="11dp"
         android:text="- can't work out"
+        android:textColor="?attr/colorText"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

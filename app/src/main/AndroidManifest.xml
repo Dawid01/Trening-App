@@ -36,7 +36,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".MainActivity" />
         <activity android:name=".MapActivity" />
-        <activity android:name=".BMICalculator"></activity>
+        <activity android:name=".BMICalculator" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

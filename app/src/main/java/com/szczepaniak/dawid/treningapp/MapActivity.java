@@ -35,6 +35,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        new ThemeListner(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         getSupportActionBar().hide();

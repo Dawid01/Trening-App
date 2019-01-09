@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        new ThemeListner(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

@@ -41,7 +41,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="?attr/colorAccent"
         app:counterEnabled="false"
         app:counterMaxLength="0"
         app:errorEnabled="true"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:hint="Your height"
             android:inputType="numberDecimal"
-            android:textColor="@color/colorAccent" />
+            android:textColor="?attr/colorAccent" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -72,7 +72,7 @@
         android:background="@drawable/button"
         android:text="Calculate"
         android:textAlignment="center"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textColor="?attr/colorText"
         android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -89,7 +89,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="?attr/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Calculate"

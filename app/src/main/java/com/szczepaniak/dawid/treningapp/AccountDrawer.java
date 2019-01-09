@@ -88,6 +88,13 @@ public class AccountDrawer implements NavigationView.OnNavigationItemSelectedLis
                 context.startActivity(calculator);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 break;
+            case R.id.nav_settings:
+
+                Intent settings = new Intent(context, SettingsActivity.class);
+                context.startActivity(settings);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                activity.finish();
+                break;
 
         }
         return true;

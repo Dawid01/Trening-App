@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="?attr/colorPrimaryDark"
     tools:context=".WorkoutActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -34,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:headerLayout="@layout/muscles_drawer"
-        app:itemTextColor="@color/colorPrimaryDark" />
+        app:itemTextColor="?attr/colorPrimaryDark" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -45,7 +45,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
-        app:itemTextColor="@color/colorPrimaryDark"
+        app:itemTextColor="?attr/colorPrimaryDark"
         app:menu="@menu/drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -33,7 +33,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@color/colorAccent" />
+                app:srcCompat="?attr/colorAccent" />
 
             <TextView
                 android:id="@+id/Title"
@@ -45,7 +45,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="Graph"
                 android:textAlignment="textStart"
-                android:textColor="@android:color/background_light"
+                android:textColor="?attr/colorText"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bg"
                 app:layout_constraintVertical_bias="0.45"
-                app:seriesColor="@color/colorPrimary"
+                app:seriesColor="?attr/colorPrimary"
                 app:seriesTitle="Workouts"
                 app:seriesType="line" />
 

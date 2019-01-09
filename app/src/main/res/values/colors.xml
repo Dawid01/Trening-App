@@ -6,5 +6,16 @@
     <color name="colorScroll">#20c56000</color>
     <color name="musscleGood">#4aef4a</color>
     <color name="musscleBad">#ef0e0e</color>
+    <color name="gray">#424242</color>
+    <color name="blue">#2195f2</color>
+    <color name="red">#d32f2f</color>
+    <color name="pink">#d81b60</color>
+    <color name="purple">#8e24aa</color>
+    <color name="indigo">#3f51b5</color>
+    <color name="teal">#00796b</color>
+    <color name="green">#00c853</color>
+    <color name="yellow">#fdd835</color>
+    <color name="brown">#6d4c41</color>
+    <color name="black">#212121</color>
 
 </resources>
