@@ -73,7 +73,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        new ThemeListner(this);
+        new ThemeListner(this, false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -543,12 +543,12 @@ public class WorkoutActivity extends AppCompatActivity {
 
                        //series.setColor(Color.parseColor("#424242"));
                        //series.setColor(getTheme().getResources().getColor(R.attr.colorAccent));
-                       series.setColor(new ThemeListner(WorkoutActivity.this).getThemeColor());
+                       series.setColor(new ThemeListner(WorkoutActivity.this, false).getThemeColor());
                        series.setTitle(WORKOUT_NAME);
                        series.setDrawDataPoints(true);
                        //series.setDataPointsRadius(10);
                        series.setThickness(4);
-                       int c = new ThemeListner(WorkoutActivity.this).getThemeColor();
+                       int c = new ThemeListner(WorkoutActivity.this, false).getThemeColor();
                        int color = Color.argb(50, Color.red(c), Color.green(c), Color.blue(c));
                        series.setBackgroundColor(color);
 

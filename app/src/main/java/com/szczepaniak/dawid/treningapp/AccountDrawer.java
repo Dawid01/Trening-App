@@ -95,6 +95,13 @@ public class AccountDrawer implements NavigationView.OnNavigationItemSelectedLis
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 activity.finish();
                 break;
+            case R.id.nav_aboutus:
+
+                Intent music = new Intent(context, MusicPlayer.class);
+                context.startActivity(music);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                activity.finish();
+                break;
 
         }
         return true;

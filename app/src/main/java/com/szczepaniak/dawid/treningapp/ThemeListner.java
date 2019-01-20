@@ -10,7 +10,7 @@ public class ThemeListner {
     private Activity activity;
     private SharedPreferences pereferences;
 
-    public ThemeListner(Activity activity) {
+    public ThemeListner(Activity activity, boolean fullscreen) {
 
         this.activity = activity;
 
@@ -24,44 +24,87 @@ public class ThemeListner {
         Singleton singleton = Singleton.getInstance();
         int themeMode = singleton.getTheme();
 
-        switch (themeMode){
+        if(!fullscreen) {
+            switch (themeMode) {
 
-            case 0:
-                activity.setTheme(R.style.AppTheme);
-                break;
-            case 1:
-                activity.setTheme(R.style.Blue);
-                break;
-            case 2:
-                activity.setTheme(R.style.Red);
-                break;
-            case 3:
-                activity.setTheme(R.style.Pink);
-                break;
-            case 4:
-                activity.setTheme(R.style.Purple);
-                break;
-            case 5:
-                activity.setTheme(R.style.Indigo);
-                break;
-            case 6:
-                activity.setTheme(R.style.Teal);
-                break;
-            case 7:
-                activity.setTheme(R.style.Green);
-                break;
-            case 8:
-                activity.setTheme(R.style.Yellow);
-                break;
-            case 9:
-                activity.setTheme(R.style.Brown);
-                break;
-            case 10:
-                activity.setTheme(R.style.Gray);
-                break;
-            case 11:
-                activity.setTheme(R.style.Black);
-                break;
+                case 0:
+                    activity.setTheme(R.style.AppTheme);
+                    break;
+                case 1:
+                    activity.setTheme(R.style.Blue);
+                    break;
+                case 2:
+                    activity.setTheme(R.style.Red);
+                    break;
+                case 3:
+                    activity.setTheme(R.style.Pink);
+                    break;
+                case 4:
+                    activity.setTheme(R.style.Purple);
+                    break;
+                case 5:
+                    activity.setTheme(R.style.Indigo);
+                    break;
+                case 6:
+                    activity.setTheme(R.style.Teal);
+                    break;
+                case 7:
+                    activity.setTheme(R.style.Green);
+                    break;
+                case 8:
+                    activity.setTheme(R.style.Yellow);
+                    break;
+                case 9:
+                    activity.setTheme(R.style.Brown);
+                    break;
+                case 10:
+                    activity.setTheme(R.style.Gray);
+                    break;
+                case 11:
+                    activity.setTheme(R.style.Black);
+                    break;
+            }
+        }else {
+
+            switch (themeMode){
+
+                case 0:
+                    activity.setTheme(R.style.AppThemeF);
+                    break;
+                case 1:
+                    activity.setTheme(R.style.BlueF);
+                    break;
+                case 2:
+                    activity.setTheme(R.style.RedF);
+                    break;
+                case 3:
+                    activity.setTheme(R.style.PinkF);
+                    break;
+                case 4:
+                    activity.setTheme(R.style.PurpleF);
+                    break;
+                case 5:
+                    activity.setTheme(R.style.IndigoF);
+                    break;
+                case 6:
+                    activity.setTheme(R.style.TealF);
+                    break;
+                case 7:
+                    activity.setTheme(R.style.GreenF);
+                    break;
+                case 8:
+                    activity.setTheme(R.style.YellowF);
+                    break;
+                case 9:
+                    activity.setTheme(R.style.BrownF);
+                    break;
+                case 10:
+                    activity.setTheme(R.style.GrayF);
+                    break;
+                case 11:
+                    activity.setTheme(R.style.BlackF);
+                    break;
+            }
         }
 
     }
