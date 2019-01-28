@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import java.io.EOFException;
+
 
 public class MusicPlayer extends AppCompatActivity {
 
@@ -72,7 +74,7 @@ public class MusicPlayer extends AppCompatActivity {
                 .setCustomBigContentView(notificationView)
                 .setCustomContentView(notificationViewMini)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setOngoing(false)
+                .setOngoing(true)
                 .setAutoCancel(true)
                 .setContentTitle(songName)
                 .setContentText(author)
@@ -83,7 +85,7 @@ public class MusicPlayer extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(1, newMessageNotification);
 
-        //WallpaperManager.getInstance(this).setBitmap(musicIcon, null, true, WallpaperManager.FLAG_LOCK);
+        WallpaperManager wallpaperManager =  WallpaperManager.getInstance(this);
 
 
     }
