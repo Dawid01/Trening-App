@@ -6,19 +6,36 @@ import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.EOFException;
 
 
 public class MusicPlayer extends AppCompatActivity {
+
+    private ImageView musicIcon;
+    private TextView musicAuthor;
+    private TextView musicTitle;
+    private TextView musicDuration;
+    private TextView musicProgress;
+    private SeekBar progressMusic;
+    private ImageView pauseBtm;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +45,119 @@ public class MusicPlayer extends AppCompatActivity {
 
         setNotification("Thunder", "Imagine Dragons");
 
+        musicIcon = findViewById(R.id.musicIcon);
+        musicAuthor = findViewById(R.id.Author);
+        musicTitle = findViewById(R.id.Title);
+        musicDuration = findViewById(R.id.musicTime);
+        musicProgress = findViewById(R.id.timer);
+        progressMusic = findViewById(R.id.seekBar);
+        pauseBtm =  findViewById(R.id.PauseBtm);
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.music);
+        mediaPlayer.seekTo(0);
+        musicDuration.setText(createTimeLabel(mediaPlayer.getDuration()));
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        final AssetFileDescriptor afd=getResources().openRawResourceFd(R.raw.music);
+        mmr.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+        byte [] data = mmr.getEmbeddedPicture();
+        if(data != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            musicIcon.setImageBitmap(bitmap);
+        }
+        progressMusic.setMax(mediaPlayer.getDuration());
+        String artist =  mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        musicAuthor.setText(artist);
+        musicTitle.setText(title);
+
+
+        progressMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+                if(b) {
+                    mediaPlayer.seekTo(i);
+                    musicProgress.setText(createTimeLabel(i));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        pauseBtm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!mediaPlayer.isPlaying()){
+
+                    mediaPlayer.start();
+                }else {
+
+                    mediaPlayer.pause();
+                }
+            }
+        });
+
+        mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(MediaPlayer mediaPlayer, int i, int i1) {
+
+
+                return false;
+            }
+        });
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (mediaPlayer != null){
+
+                    try{
+                        Message msg =  new Message();
+                        msg.what = mediaPlayer.getCurrentPosition();
+                        mHandler.sendMessage(msg);
+                        Thread.sleep(1000);
+
+                    }catch (InterruptedException e){
+
+                    }
+                }
+            }
+        }).start();
+
+
+    }
+
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            progressMusic.setProgress(msg.what);
+            musicProgress.setText(createTimeLabel(msg.what));
+        }
+    };
+
+
+    public String createTimeLabel(int time){
+
+        String timeLabel = "";
+        int min = time / 1000/ 60;
+        int sec =  time / 1000 % 60;
+
+        timeLabel = min + ":";
+        if(sec < 10) timeLabel += "0";
+        timeLabel += sec;
+        return timeLabel;
     }
 
     @Override
