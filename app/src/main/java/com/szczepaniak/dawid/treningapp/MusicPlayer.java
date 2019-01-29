@@ -1,11 +1,12 @@
 package com.szczepaniak.dawid.treningapp;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +14,9 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.media.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import java.io.EOFException;
 
 
 public class MusicPlayer extends AppCompatActivity {
@@ -36,6 +36,8 @@ public class MusicPlayer extends AppCompatActivity {
     private SeekBar progressMusic;
     private ImageView pauseBtm;
     MediaPlayer mediaPlayer;
+
+    final int MY_PERMISSIONS_AUDIO = 9999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,23 @@ public class MusicPlayer extends AppCompatActivity {
         musicAuthor.setText(artist);
         musicTitle.setText(title);
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    MY_PERMISSIONS_AUDIO);
+
+        } else {
+        }
+
+
+        VisualizerMusic lineBarVisualizer = findViewById(R.id.visualizer);
+        lineBarVisualizer.setColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        lineBarVisualizer.setDensity(70);
+        lineBarVisualizer.setPlayer(mediaPlayer.getAudioSessionId());
 
         progressMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -92,6 +111,7 @@ public class MusicPlayer extends AppCompatActivity {
             }
         });
 
+        pauseBtm.setImageResource(R.drawable.ic_media_pause_dark);
         pauseBtm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,9 +119,12 @@ public class MusicPlayer extends AppCompatActivity {
                 if(!mediaPlayer.isPlaying()){
 
                     mediaPlayer.start();
+                    pauseBtm.setImageResource(R.drawable.ic_media_pause_dark);
                 }else {
 
                     mediaPlayer.pause();
+                    pauseBtm.setImageResource(R.drawable.ic_media_play_dark);
+
                 }
             }
         });
@@ -136,6 +159,25 @@ public class MusicPlayer extends AppCompatActivity {
         }).start();
 
 
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_AUDIO: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                    this.finish();
+                }
+                return;
+            }
+
+        }
     }
 
 

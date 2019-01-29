@@ -45,6 +45,10 @@
                     android:layout_marginBottom="4dp"
                     android:text="Imagine Dragons"
                     android:textAlignment="textStart"
+                    android:shadowColor="#ffff"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="1.5"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.02"
@@ -59,6 +63,10 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:shadowColor="#ffff"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="1.5"
                     android:text="Thunder"
                     android:textAlignment="textStart"
                     android:textSize="30sp"
@@ -95,6 +103,17 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <com.szczepaniak.dawid.treningapp.VisualizerMusic
+                    android:id="@+id/visualizer"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="50dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/musicTime"
@@ -174,7 +193,7 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.854"
+                    app:layout_constraintVertical_bias="0.83"
                     app:srcCompat="@drawable/musicnext" />
 
                 <ImageView
@@ -201,7 +220,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/PauseBtm"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.854"
+                    app:layout_constraintVertical_bias="0.83"
                     app:srcCompat="@drawable/musicnext" />
             </android.support.constraint.ConstraintLayout>
 
